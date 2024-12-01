@@ -53,11 +53,13 @@ class CheckButton extends StatelessWidget {
       children: [
         iconWidget ?? const SizedBox.shrink(),
         Dimentions.sizedBox12W,
-        Text(
-          title,
-          style: TextStyles().textStylesMontserrat(
-            fontSize: 14,
-            color: textColor
+        Expanded(
+          child: Text(
+            title,
+            style: TextStyles().textStylesMontserrat(
+              fontSize: 14,
+              color: textColor
+            ),
           ),
         ),
       ],
