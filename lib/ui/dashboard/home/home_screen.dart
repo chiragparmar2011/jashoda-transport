@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jashoda_transport/core/routes/app_routes.dart';
 import 'package:jashoda_transport/core/utils/app_assets.dart';
 import 'package:jashoda_transport/core/utils/app_colors.dart';
+import 'package:jashoda_transport/core/utils/app_enum.dart';
 import 'package:jashoda_transport/core/utils/app_strings.dart';
 import 'package:jashoda_transport/core/utils/dimentions.dart';
 import 'package:jashoda_transport/core/utils/text_styles.dart';
@@ -10,9 +11,11 @@ import 'package:jashoda_transport/core/utils/utils.dart';
 import 'package:jashoda_transport/core/widgets/buttons/common_button_with_icon.dart';
 import 'package:jashoda_transport/core/widgets/dialog/common_progress_indicator.dart';
 import 'package:jashoda_transport/core/widgets/image_assets.dart';
+import 'package:jashoda_transport/cubit/bottomnav/bottom_nav_cubit.dart';
 import 'package:jashoda_transport/cubit/dashboard/home/home_cubit.dart';
 import 'package:jashoda_transport/data/model/truck/truck_detail_model.dart';
 import 'package:jashoda_transport/getit_injector.dart';
+import 'package:jashoda_transport/ui/dashboard/dashboard_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -40,7 +43,9 @@ class _HomeScreenState extends State<HomeScreen> {
           bloc: homeCubit,
           listener: (context, state) {
             if (state is TruckDetailLoadingState) {
-              const CommonProgressIndicator(color: AppColors.primaryBlue,);
+              const CommonProgressIndicator(
+                color: AppColors.primaryBlue,
+              );
             }
             if (state is TruckDetailErrorState) {
               Utils.errorMessage(context, state.error);
@@ -69,17 +74,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   thickness: 1,
                 ),
                 Dimentions.sizedBox16H,
-              state is TruckDetailLoadingState  ?
-              const Center(
-                child: CommonProgressIndicator(
-                  color: AppColors.primaryBlue,
-                ),
-              )
-             : Expanded(
-                  child: (homeCubit.truckDetailList ?? []).isEmpty
-                      ? _buildWithOutDetail()
-                      : _buildWithDetail(),
-                ),
+                state is TruckDetailLoadingState
+                    ? const Center(
+                        child: CommonProgressIndicator(
+                          color: AppColors.primaryBlue,
+                        ),
+                      )
+                    : Expanded(
+                        child: (homeCubit.truckDetailList ?? []).isEmpty ? _buildWithOutDetail() : _buildWithDetail(),
+                      ),
               ],
             );
           },
@@ -125,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
           height: 64,
           title: AppStrings.startNewCalculation,
           onPressed: () {
-            Navigator.pushNamed(context, MyRoutes.createCalculationScreen);
+            context.read<BottomNavCubit>().updateNavItem(BottomNavItem.newly);
           },
           iconWidget: ImageAssets(image: AssetsPath.addWhiteIcon),
         ),
