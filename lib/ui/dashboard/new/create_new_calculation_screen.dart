@@ -6,10 +6,12 @@ import 'package:jashoda_transport/core/utils/app_colors.dart';
 import 'package:jashoda_transport/core/utils/app_strings.dart';
 import 'package:jashoda_transport/core/utils/dimentions.dart';
 import 'package:jashoda_transport/core/utils/text_styles.dart';
+import 'package:jashoda_transport/core/utils/utils.dart';
 import 'package:jashoda_transport/core/widgets/buttons/cancle_button.dart';
 import 'package:jashoda_transport/core/widgets/buttons/check_button.dart';
 import 'package:jashoda_transport/core/widgets/buttons/common_button_with_icon.dart';
 import 'package:jashoda_transport/core/widgets/buttons/confirmation_button.dart';
+import 'package:jashoda_transport/core/widgets/dialog/common_progress_indicator.dart';
 import 'package:jashoda_transport/core/widgets/image_assets.dart';
 import 'package:jashoda_transport/core/widgets/textformfield/dimension_from_field.dart';
 import 'package:jashoda_transport/cubit/dashboard/calculation/calculation_cubit.dart';
@@ -31,13 +33,12 @@ class _CreateNewCalculationScreenState extends State<CreateNewCalculationScreen>
   final CalculationCubit calculationCubit = injector<CalculationCubit>();
 
   final _prefs = injector.get<SharedPreferenceHelper>();
- String? id;
+  String? id;
 
   @override
   void initState() {
     setState(() {
       id = _prefs.getString("id");
-
     });
     super.initState();
   }
@@ -52,8 +53,27 @@ class _CreateNewCalculationScreenState extends State<CreateNewCalculationScreen>
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
           child: BlocConsumer<CalculationCubit, CalculationState>(
             bloc: calculationCubit,
-            listener: (context, state) {},
+            listener: (context, state) {
+              if (state is SubmitBoxLoadedState) {
+                Utils.successMessage(context, "Box Added");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => VehicleLoadedScreen(
+                      creatloadmodel: state.creatloadmodel,
+                    ),
+                  ),
+                );
+              }
+            },
             builder: (context, state) {
+              if (state is SubmitBoxLoadingState) {
+                return const Center(
+                  child: CommonProgressIndicator(
+                    color: Colors.blueAccent,
+                  ),
+                );
+              }
               return Column(
                 children: [
                   Expanded(
@@ -109,6 +129,7 @@ class _CreateNewCalculationScreenState extends State<CreateNewCalculationScreen>
                               foregroundColor: AppColors.orange,
                               title: AppStrings.submit,
                               onPressed: () {
+                                print('Boxes is==>${calculationCubit.boxes.first.weight}');
                                 // Navigator.push(context, MaterialPageRoute(builder: (context) => VehicleLoadedScreen(),));
                                 showDialog<bool>(
                                   context: context,
@@ -166,7 +187,10 @@ class _CreateNewCalculationScreenState extends State<CreateNewCalculationScreen>
                                                 ),
                                               ),
                                               onPressed: () async {
-                                                // Handle submit action here
+                                                calculationCubit.submitBox(
+                                                  userId: "6744b9f4a07f02312a804606",
+                                                );
+                                                Navigator.pop(context);
                                               },
                                               child: const Text('Submit'),
                                             ),
@@ -380,7 +404,7 @@ class _CreateNewCalculationScreenState extends State<CreateNewCalculationScreen>
         ListView.builder(
           itemCount: calculationCubit.boxes.length,
           shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(), // Prevent scrolling within ListView
+          physics: const NeverScrollableScrollPhysics(), // Prevent scrolling within ListView
           itemBuilder: (context, index) {
             final box = calculationCubit.boxes[index];
             return Card(
@@ -392,7 +416,7 @@ class _CreateNewCalculationScreenState extends State<CreateNewCalculationScreen>
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Left section: Box details
                     Expanded(
@@ -407,8 +431,9 @@ class _CreateNewCalculationScreenState extends State<CreateNewCalculationScreen>
                             ),
                           ),
                           const SizedBox(height: 8.0),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          Wrap(
+                            spacing: 16.0, // Spacing between items
+                            runSpacing: 8.0, // Spacing between rows
                             children: [
                               Text(
                                 "Length: ${box.length}",
@@ -425,8 +450,9 @@ class _CreateNewCalculationScreenState extends State<CreateNewCalculationScreen>
                             ],
                           ),
                           const SizedBox(height: 8.0),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          Wrap(
+                            spacing: 16.0,
+                            runSpacing: 8.0,
                             children: [
                               Text(
                                 "No. of Items: ${box.quantity}",
@@ -443,17 +469,16 @@ class _CreateNewCalculationScreenState extends State<CreateNewCalculationScreen>
                     ),
                     // Right section: Delete icon
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(30, 0, 0, 0),
+                      padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
                       child: InkWell(
                         child: ImageAssets(
                           image: AssetsPath.deleteIcon,
                         ),
                         onTap: () {
-                          print("Tapper");
                           calculationCubit.removeBox(index);
                         },
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -469,7 +494,6 @@ class _CreateNewCalculationScreenState extends State<CreateNewCalculationScreen>
           },
           iconWidget: ImageAssets(image: AssetsPath.addWhiteIcon),
         ),
-        // SizedBox(height: 10,),
       ],
     );
   }
