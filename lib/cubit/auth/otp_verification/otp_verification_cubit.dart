@@ -4,6 +4,7 @@ import 'package:jashoda_transport/core/error/error_handler.dart';
 import 'package:jashoda_transport/core/routes/app_routes.dart';
 import 'package:jashoda_transport/core/utils/app_strings.dart';
 import 'package:jashoda_transport/data/repo_impl/auto_repo_impl/authentication_repository_impl.dart';
+
 part 'otp_verification_state.dart';
 
 class OtpVerificationCubit extends Cubit<OtpVerificationState> {

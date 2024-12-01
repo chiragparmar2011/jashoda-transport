@@ -11,7 +11,6 @@ import 'package:jashoda_transport/core/widgets/buttons/common_button_with_icon.d
 import 'package:jashoda_transport/core/widgets/dialog/common_progress_indicator.dart';
 import 'package:jashoda_transport/core/widgets/image_assets.dart';
 import 'package:jashoda_transport/cubit/dashboard/home/home_cubit.dart';
-import 'package:jashoda_transport/data/model/load/calculation_model.dart';
 import 'package:jashoda_transport/data/model/truck/truck_detail_model.dart';
 import 'package:jashoda_transport/getit_injector.dart';
 

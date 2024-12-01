@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:jashoda_transport/ui/auth/mobile/enter_mo_number_screen.dart';
 import 'package:jashoda_transport/ui/auth/mobile/otp_verification_screen.dart';
 import 'package:jashoda_transport/ui/auth/register/registration_screen.dart';
-import 'package:jashoda_transport/ui/dashboard/new/create_new_calculation_screen.dart';
 import 'package:jashoda_transport/ui/dashboard/calculation/saved_calculation_screen.dart';
-import 'package:jashoda_transport/ui/vehicle/vehicle_loaded_screen.dart';
 import 'package:jashoda_transport/ui/dashboard/dashboard_screen.dart';
 import 'package:jashoda_transport/ui/dashboard/home/home_screen.dart';
+import 'package:jashoda_transport/ui/dashboard/new/create_new_calculation_screen.dart';
 import 'package:jashoda_transport/ui/dashboard/profile/profile_screen.dart';
 import 'package:jashoda_transport/ui/onboard/onboard_screen.dart';
 import 'package:jashoda_transport/ui/profile_section/edit_profile_screen.dart';
 import 'package:jashoda_transport/ui/splash/splash_screen.dart';
+import 'package:jashoda_transport/ui/vehicle/vehicle_loaded_screen.dart';
 
 class MyRoutes {
   static const String splashScreen = '/';

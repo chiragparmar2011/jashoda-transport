@@ -6,6 +6,7 @@ import 'package:jashoda_transport/core/routes/app_routes.dart';
 import 'package:jashoda_transport/core/utils/app_strings.dart';
 import 'package:jashoda_transport/cubit/multi_bloc_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'getit_injector.dart' as di;
 
 Future<void> main() async {

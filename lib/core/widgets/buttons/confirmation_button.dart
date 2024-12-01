@@ -3,7 +3,6 @@ import 'package:jashoda_transport/core/utils/app_colors.dart';
 import 'package:jashoda_transport/core/utils/dimentions.dart';
 import 'package:jashoda_transport/core/utils/text_styles.dart';
 import 'package:jashoda_transport/core/widgets/dialog/common_progress_indicator.dart';
-import 'package:jashoda_transport/core/widgets/image_assets.dart';
 
 class ConfirmationButton extends StatelessWidget {
   final void Function()? onPressed;

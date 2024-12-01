@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jashoda_transport/core/routes/app_routes.dart';
-import 'package:jashoda_transport/core/utils/app_assets.dart';
 import 'package:jashoda_transport/core/utils/app_colors.dart';
 import 'package:jashoda_transport/core/utils/app_strings.dart';
 import 'package:jashoda_transport/core/utils/dimentions.dart';
@@ -9,7 +7,6 @@ import 'package:jashoda_transport/core/utils/text_styles.dart';
 import 'package:jashoda_transport/core/widgets/buttons/back_arrow.dart';
 import 'package:jashoda_transport/core/widgets/buttons/common_button.dart';
 import 'package:jashoda_transport/core/widgets/image_assets.dart';
-import 'package:jashoda_transport/cubit/onboard/onboard_cubit.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 //ignore: must_be_immutable

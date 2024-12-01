@@ -16,14 +16,13 @@ import 'package:jashoda_transport/core/widgets/image_assets.dart';
 import 'package:jashoda_transport/core/widgets/textformfield/dimension_from_field.dart';
 import 'package:jashoda_transport/cubit/dashboard/calculation/calculation_cubit.dart';
 import 'package:jashoda_transport/data/model/load/dimension_model.dart';
-import 'package:jashoda_transport/data/model/user/usermodel.dart';
 import 'package:jashoda_transport/getit_injector.dart';
 import 'package:jashoda_transport/ui/vehicle/vehicle_loaded_screen.dart';
 
 import 'widget/dimension_widget.dart';
 
 class CreateNewCalculationScreen extends StatefulWidget {
-  CreateNewCalculationScreen({super.key});
+  const CreateNewCalculationScreen({super.key});
 
   @override
   State<CreateNewCalculationScreen> createState() => _CreateNewCalculationScreenState();
@@ -60,7 +59,7 @@ class _CreateNewCalculationScreenState extends State<CreateNewCalculationScreen>
                   context,
                   MaterialPageRoute(
                     builder: (context) => VehicleLoadedScreen(
-                      creatloadmodel: state.creatloadmodel,
+                      createLoadModel: state.createLoadModel,
                     ),
                   ),
                 );

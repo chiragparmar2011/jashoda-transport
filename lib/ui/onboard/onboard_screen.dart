@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jashoda_transport/core/utils/app_colors.dart';
 import 'package:jashoda_transport/core/utils/app_strings.dart';
-import 'package:jashoda_transport/core/utils/dimentions.dart';
 import 'package:jashoda_transport/cubit/onboard/onboard_cubit.dart';
 import 'package:jashoda_transport/ui/onboard/widget/onboard_widget.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnBoardScreen extends StatelessWidget {
   OnBoardScreen({super.key});

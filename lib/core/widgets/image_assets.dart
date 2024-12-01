@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jashoda_transport/core/utils/app_assets.dart';
 import 'package:jashoda_transport/core/utils/app_colors.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class ImageAssets extends StatelessWidget {
   const ImageAssets({

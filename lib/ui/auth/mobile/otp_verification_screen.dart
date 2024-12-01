@@ -10,7 +10,6 @@ import 'package:jashoda_transport/core/utils/utils.dart';
 import 'package:jashoda_transport/core/widgets/buttons/back_arrow.dart';
 import 'package:jashoda_transport/core/widgets/buttons/common_button.dart';
 import 'package:jashoda_transport/core/widgets/image_assets.dart';
-import 'package:jashoda_transport/cubit/auth/inputNumber/input_mo_number_cubit.dart';
 import 'package:jashoda_transport/cubit/auth/otp_verification/otp_verification_cubit.dart';
 import 'package:jashoda_transport/getit_injector.dart';
 import 'package:jashoda_transport/ui/auth/mobile/widget/custom_code_field.dart';

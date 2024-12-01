@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jashoda_transport/core/utils/app_colors.dart';
-import 'package:jashoda_transport/core/utils/dimentions.dart';
 import 'package:jashoda_transport/core/utils/text_styles.dart';
-import 'package:jashoda_transport/core/widgets/image_assets.dart';
 
 class CancelButton extends StatelessWidget {
   final void Function()? onPressed;

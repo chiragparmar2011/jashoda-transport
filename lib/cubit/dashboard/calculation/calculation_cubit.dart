@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jashoda_transport/core/error/error_handler.dart';
 import 'package:jashoda_transport/core/utils/app_enum.dart';
-import 'package:jashoda_transport/data/model/CreatLoadModel.dart';
-import 'package:jashoda_transport/data/model/load/calculation_model.dart';
+import 'package:jashoda_transport/data/model/create_load_model.dart';
 import 'package:jashoda_transport/data/model/load/dimension_model.dart';
 import 'package:jashoda_transport/data/model/new/box.dart';
 import 'package:jashoda_transport/data/model/truck/truck_detail_model.dart';
@@ -184,7 +183,7 @@ class CalculationCubit extends Cubit<CalculationState> {
   }
 
   List<TruckDetailModel>? truckDetailList = [];
-  Creatloadmodel? creatloadmodel;
+  CreateLoadModel? creatloadmodel;
   /// Save Calculation API CALl
   Future<void> fetchSaveCalculations(String userID) async {
     emit(SaveCalculationLoadingState());
@@ -201,7 +200,6 @@ class CalculationCubit extends Cubit<CalculationState> {
     try {
       creatloadmodel = await truckLoadRepositoryImpl.submitBoxDataRepo(userId: userId,boxes: boxes);
       emit(SubmitBoxLoadedState(creatloadmodel));
-
     } catch (error) {
       emit(SubmitBoxErrorState(ErrorHandler.handle(error).failure.message));
     }
