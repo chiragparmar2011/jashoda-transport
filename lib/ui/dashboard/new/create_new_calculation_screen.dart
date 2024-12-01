@@ -214,7 +214,7 @@ class _CreateNewCalculationScreenState extends State<CreateNewCalculationScreen>
                 selectedTextColor: dimensionData.isSelected ? AppColors.white : AppColors.black,
                 selectBgColor: dimensionData.isSelected ? AppColors.primaryBlue : AppColors.white,
                 onTap: () {
-                  calculationCubit.updateDimensions;
+                  calculationCubit.updateDimensions(dimensionData.isSelected, index);
                 },
               );
             },

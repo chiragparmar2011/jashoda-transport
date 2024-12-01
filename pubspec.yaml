@@ -47,6 +47,7 @@ dependencies:
   pretty_dio_logger: ^1.4.0
   jwt_decoder: ^2.0.1
   intl: ^0.20.1
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:

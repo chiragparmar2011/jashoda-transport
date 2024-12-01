@@ -44,4 +44,5 @@ class AssetsPath {
   static String deleteIcon = 'assets/icons/delete.svg';
   static String addAvtarIcon = 'assets/icons/addAvtar.svg';
   static String deliveryTruckIcon = 'assets/icons/deliveryTruck.svg';
+  static String logOutIcon = 'assets/icons/logout.svg';
 }

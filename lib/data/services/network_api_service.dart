@@ -60,6 +60,22 @@ class NetworkApiService extends BaseApiService {
   }
 
   @override
+  Future<Response> patch({
+    required String endPoint,
+    data,
+    String? token,
+    int? timeOut,
+  }) async {
+    if (timeOut != null) {
+      api.sendRequest.options.connectTimeout = Duration(milliseconds: timeOut);
+    }
+    return await api.sendRequest.patch(
+      endPoint,
+      data: data,
+    );
+  }
+
+  @override
   Future<Response> delete({
     required String endPoint,
     data,

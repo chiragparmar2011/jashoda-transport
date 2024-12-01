@@ -65,6 +65,14 @@ class ProfileScreen extends StatelessWidget {
               title: AppStrings.privacyPolicy,
               onTap: () {},
             ),
+            Dimentions.sizedBox16H,
+            ProfileSectionWidget(
+              avtarImage: AssetsPath.logOutIcon,
+              title: AppStrings.logout,
+              onTap: () {
+
+              },
+            ),
           ],
         ),
       ),

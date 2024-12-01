@@ -20,6 +20,7 @@ class AppStrings {
   static const String sendOTP = 'Send OTP';
   static const String agreeWith = 'By continuing you agree with';
   static const String privacyPolicy = 'Privacy Policy';
+  static const String logout = 'Logout';
   static const String endSymbol = ' & ';
   static const String termsNCondition = 'Terms and conditions.';
   static const String enterOTP = 'Enter OTP';

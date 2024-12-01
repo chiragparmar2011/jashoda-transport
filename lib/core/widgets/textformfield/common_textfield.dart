@@ -10,6 +10,7 @@ class CommonTextField extends StatelessWidget {
     this.hintText,
     this.enable = true,
     this.enabled = true,
+    this.readOnly = false,
     this.initialValue,
     this.labelText,
     this.suffixIconButton,
@@ -19,7 +20,7 @@ class CommonTextField extends StatelessWidget {
     this.keyboardType,
     this.obscuringCharacter,
     this.errorMaxLines,
-    this.maxLines,
+    this.maxLines = 1,
     super.key,
     this.onTab,
     this.prefixIconButton,
@@ -39,6 +40,7 @@ class CommonTextField extends StatelessWidget {
   final bool obscureText;
   final bool enable;
   final bool enabled;
+  final bool readOnly;
   final String? Function(String?)? validator;
   final bool isSetting;
   final String? obscuringCharacter;
@@ -61,6 +63,7 @@ class CommonTextField extends StatelessWidget {
         obscuringCharacter: "*",
         onTap: onTab,
         maxLines: maxLines,
+        readOnly: readOnly,
         keyboardType: keyboardType,
         validator: (validator != null) ? validator : null,
         inputFormatters: inputFormatters,

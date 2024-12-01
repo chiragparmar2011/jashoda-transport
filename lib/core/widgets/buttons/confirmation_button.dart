@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jashoda_transport/core/utils/app_colors.dart';
 import 'package:jashoda_transport/core/utils/dimentions.dart';
 import 'package:jashoda_transport/core/utils/text_styles.dart';
+import 'package:jashoda_transport/core/widgets/dialog/common_progress_indicator.dart';
 import 'package:jashoda_transport/core/widgets/image_assets.dart';
 
 class ConfirmationButton extends StatelessWidget {
@@ -12,6 +13,7 @@ class ConfirmationButton extends StatelessWidget {
   final Widget? iconWidget;
   final Color? foregroundColor;
   final Color? backgroundColor;
+  final bool isLoading;
 
   const ConfirmationButton({
     super.key,
@@ -22,6 +24,7 @@ class ConfirmationButton extends StatelessWidget {
     this.iconWidget,
     this.foregroundColor = AppColors.primaryBlue,
     this.backgroundColor = AppColors.white,
+    this.isLoading = false,
   });
 
   @override
@@ -30,7 +33,7 @@ class ConfirmationButton extends StatelessWidget {
       width: width,
       height: height,
       child: TextButton(
-        onPressed: onPressed,
+        onPressed: isLoading ? null :onPressed,
         style: TextButton.styleFrom(
           padding: EdgeInsets.zero,
           backgroundColor: foregroundColor,
@@ -39,9 +42,13 @@ class ConfirmationButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
         ),
-        child: _buildRow(),
+        child: isLoading ? _buildProgressIndicator() : _buildRow(),
       ),
     );
+  }
+
+  Widget _buildProgressIndicator() {
+    return const CommonProgressIndicator(color: AppColors.white);
   }
 
   Widget _buildRow() {

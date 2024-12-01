@@ -36,7 +36,7 @@ class RegistrationCubit extends Cubit<RegistrationState> {
       };
       UserModel? data = await authRepositoryImpl.register(requestData);
       print("id register==>${data?.sId}");
-      prefs.setString(key: "id", value: data!.sId.toString());
+      prefs.setString(key: "id", value: data?.sId ?? '');
       prefs.setUser(data);
       emit(RegisterSuccessState(data));
     } catch (error) {

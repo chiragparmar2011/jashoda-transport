@@ -70,7 +70,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   thickness: 1,
                 ),
                 Dimentions.sizedBox16H,
-                Expanded(
+              state is TruckDetailLoadingState  ?
+              const Center(
+                child: CommonProgressIndicator(
+                  color: AppColors.primaryBlue,
+                ),
+              )
+             : Expanded(
                   child: (homeCubit.truckDetailList ?? []).isEmpty
                       ? _buildWithOutDetail()
                       : _buildWithDetail(),
@@ -103,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
           height: 64,
           title: AppStrings.startNewCalculation,
           onPressed: () {
-            Navigator.pushNamed(context, MyRoutes.newScreen);
+            Navigator.pushNamed(context, MyRoutes.createCalculationScreen);
           },
           iconWidget: ImageAssets(image: AssetsPath.addWhiteIcon),
         ),
@@ -120,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
           height: 64,
           title: AppStrings.startNewCalculation,
           onPressed: () {
-            Navigator.pushNamed(context, MyRoutes.newScreen);
+            Navigator.pushNamed(context, MyRoutes.createCalculationScreen);
           },
           iconWidget: ImageAssets(image: AssetsPath.addWhiteIcon),
         ),

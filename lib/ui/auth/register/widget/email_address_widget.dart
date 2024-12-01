@@ -9,9 +9,10 @@ import 'package:jashoda_transport/core/widgets/textformfield/common_textfield.da
 
 //ignore: must_be_immutable
 class EmailAddressWidget extends StatelessWidget {
-  EmailAddressWidget({required this.controller, super.key});
+  EmailAddressWidget({required this.controller, required this.readOnly, super.key});
 
   TextEditingController controller = TextEditingController();
+  final bool readOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +33,7 @@ class EmailAddressWidget extends StatelessWidget {
           validator: (value) {
             return Utils().emailValidator(value ?? '');
           },
+          readOnly: readOnly,
         )
       ],
     );

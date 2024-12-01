@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jashoda_transport/core/helper/shared_preference.dart';
 import 'package:jashoda_transport/core/utils/app_assets.dart';
 import 'package:jashoda_transport/core/utils/app_colors.dart';
 import 'package:jashoda_transport/core/utils/app_strings.dart';
 import 'package:jashoda_transport/core/utils/dimentions.dart';
 import 'package:jashoda_transport/core/utils/text_styles.dart';
+import 'package:jashoda_transport/core/utils/utils.dart';
 import 'package:jashoda_transport/core/widgets/buttons/cancle_button.dart';
 import 'package:jashoda_transport/core/widgets/buttons/confirmation_button.dart';
 import 'package:jashoda_transport/core/widgets/image_assets.dart';
@@ -23,16 +27,20 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  final EditProfileCubit editProfileCubit = EditProfileCubit();
+  final EditProfileCubit editProfileCubit = injector<EditProfileCubit>();
   final _prefs = injector.get<SharedPreferenceHelper>();
 
   @override
   void initState() {
     editProfileCubit.userModel = _prefs.getUser();
-    editProfileCubit.fullNameController.text = editProfileCubit.userModel?.name ?? '';
-    editProfileCubit.emailAddController.text = editProfileCubit.userModel?.email ?? '';
-    editProfileCubit.companyNameController.text = editProfileCubit.userModel?.companyName ?? '';
-    editProfileCubit.industryTypeController.text = editProfileCubit.userModel?.industryType ?? '';
+    editProfileCubit.fullNameController.text =
+        editProfileCubit.userModel?.name ?? '';
+    editProfileCubit.emailAddController.text =
+        editProfileCubit.userModel?.email ?? '';
+    editProfileCubit.companyNameController.text =
+        editProfileCubit.userModel?.companyName ?? '';
+    editProfileCubit.industryTypeController.text =
+        editProfileCubit.userModel?.industryType ?? '';
     super.initState();
   }
 
@@ -43,64 +51,112 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Dimentions.sizedBox24H,
-              Text(
-                AppStrings.yourProfile,
-                style: TextStyles().textStylesNunito(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              Dimentions.sizedBox24H,
-              Center(
-                child: ImageAssets(
-                  image: AssetsPath.addAvtarIcon,
-                  height: 168,
-                  width: 168,
-                ),
-              ),
-              Dimentions.sizedBox32H,
-              FullNameWidget(
-                controller: editProfileCubit.fullNameController,
-              ),
-              Dimentions.sizedBox24H,
-              EmailAddressWidget(
-                controller: editProfileCubit.emailAddController,
-              ),
-              Dimentions.sizedBox24H,
-              CompanyNameWidget(
-                controller: editProfileCubit.companyNameController,
-              ),
-              Dimentions.sizedBox24H,
-              IndustryTypeWidget(
-                controller: editProfileCubit.industryTypeController,
-              ),
-              Dimentions.sizedBox32H,
-              Row(
-                children: [
-                  Flexible(
-                    child: CancelButton(
-                      width: 174,
-                      title: AppStrings.cancel,
-                      onPressed: () {
-                        Navigator.of(context).pop();
+          child: BlocConsumer<EditProfileCubit, EditProfileState>(
+            bloc: editProfileCubit,
+            listener: (context, state) {
+              if (state is EditProfileSuccessState) {
+                Navigator.of(context).pop();
+              }
+              if (state is EditProfileErrorState) {
+                Utils.errorMessage(context, state.error);
+              }
+            },
+            builder: (context, state) {
+              return Form(
+                key: editProfileCubit.formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Dimentions.sizedBox24H,
+                    Text(
+                      AppStrings.yourProfile,
+                      style: TextStyles().textStylesNunito(
+                        fontSize: 32,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    Dimentions.sizedBox24H,
+                    GestureDetector(
+                      onTap: () async {
+                        await editProfileCubit.pickImage();
                       },
+                      child: Center(
+                        child: editProfileCubit.profilePicture.isNotEmpty
+                            ? CircleAvatar(
+                                backgroundImage: MemoryImage(
+                                  base64Decode(editProfileCubit.profilePicture.split(',')[1]),
+                                ),
+                                radius: 84,
+                              )
+                            : ImageAssets(
+                                image: AssetsPath.addAvtarIcon,
+                                height: 168,
+                                width: 168,
+                              ),
+                      ),
                     ),
-                  ),
-                  Dimentions.sizedBox16W,
-                  Flexible(
-                    child: ConfirmationButton(
-                      width: 174,
-                      title: AppStrings.save,
-                      onPressed: () {},
+                    Dimentions.sizedBox32H,
+                    FullNameWidget(
+                      controller: editProfileCubit.fullNameController,
                     ),
-                  ),
-                ],
-              )
-            ],
+                    Dimentions.sizedBox24H,
+                    EmailAddressWidget(
+                      controller: editProfileCubit.emailAddController,
+                      readOnly: true,
+                    ),
+                    Dimentions.sizedBox24H,
+                    CompanyNameWidget(
+                      controller: editProfileCubit.companyNameController,
+                    ),
+                    Dimentions.sizedBox24H,
+                    IndustryTypeWidget(
+                      controller: editProfileCubit.industryTypeController,
+                    ),
+                    Dimentions.sizedBox32H,
+                    Row(
+                      children: [
+                        Flexible(
+                          child: CancelButton(
+                            width: 174,
+                            title: AppStrings.cancel,
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ),
+                        Dimentions.sizedBox16W,
+                        Flexible(
+                          child: ConfirmationButton(
+                            width: 174,
+                            title: AppStrings.save,
+                            onPressed: () {
+                              if (editProfileCubit.formKey.currentState!
+                                  .validate()) {
+                                editProfileCubit.updateUser(
+                                  userId: '674ca909018fb99fe8eda14e',
+                                  name:
+                                      editProfileCubit.fullNameController.text,
+                                  companyName: editProfileCubit
+                                      .companyNameController.text,
+                                  industryType: editProfileCubit
+                                      .industryTypeController.text,
+                                  profilePicture: editProfileCubit
+                                          .profilePicture.isNotEmpty
+                                      ? editProfileCubit.profilePicture
+                                      : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wQAAwEB/atfz7AAAAAASUVORK5CYII=',
+                                );
+                              }
+                            },
+                            isLoading:
+                                state is EditProfileLoadingState ? true : false,
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              );
+            },
           ),
         ),
       ),

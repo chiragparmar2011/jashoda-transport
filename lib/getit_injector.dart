@@ -27,7 +27,7 @@ Future<void> init() async {
   injector.registerFactory(() => BottomNavCubit());
   injector.registerFactory(() => HomeCubit(injector<TruckLoadRepositoryImpl>()));
   injector.registerFactory(() => CalculationCubit(injector<TruckLoadRepositoryImpl>()));
-  injector.registerFactory(() => EditProfileCubit());
+  injector.registerFactory(() => EditProfileCubit(injector<AuthRepositoryImpl>()));
 
   /// Repository
   injector.registerLazySingleton<AuthRepositoryImpl>(() => AuthRepositoryImpl());

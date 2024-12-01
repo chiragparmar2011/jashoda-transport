@@ -25,7 +25,7 @@ class _SavedCalculationScreenState extends State<SavedCalculationScreen> {
   @override
   void initState() {
     // calculationCubit.fetchSaveCalculations('6744b9f4a07f02312a804606');
-    calculationCubit.fetchSaveCalculations('674c4ea08940a71eee7a1a33');
+    calculationCubit.fetchSaveCalculations('6744b9f4a07f02312a804606');
     super.initState();
   }
 
@@ -66,98 +66,100 @@ class _SavedCalculationScreenState extends State<SavedCalculationScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                ListView.separated(
-                  itemCount: (calculationCubit.truckDetailList ?? []).length,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    TruckDetailModel data = (calculationCubit.truckDetailList ?? [])[index];
-                    return Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 16,
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.greyLightWhite),
-                      ),
-                      child: Row(
-                        children: [
-                          ImageAssets(
-                            image: AssetsPath.shipping,
-                            height: 48,
-                            width: 48,
-                          ),
-                          Dimentions.sizedBox22W,
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  AppStrings.vehicleName,
-                                  style: TextStyles().textStylesMontserrat(
-                                    fontSize: 10,
-                                    color: AppColors.darkGrey,
+                Flexible(
+                  child: ListView.separated(
+                    itemCount: (calculationCubit.truckDetailList ?? []).length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      TruckDetailModel data = (calculationCubit.truckDetailList ?? [])[index];
+                      return Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 16,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: AppColors.greyLightWhite),
+                        ),
+                        child: Row(
+                          children: [
+                            ImageAssets(
+                              image: AssetsPath.shipping,
+                              height: 48,
+                              width: 48,
+                            ),
+                            Dimentions.sizedBox22W,
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    AppStrings.vehicleName,
+                                    style: TextStyles().textStylesMontserrat(
+                                      fontSize: 10,
+                                      color: AppColors.darkGrey,
+                                    ),
                                   ),
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Flexible(
-                                      child: Text(
-                                        data.truckDetails?.name ?? '',
-                                        style: TextStyles().textStylesMontserrat(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w700,
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Flexible(
+                                        child: Text(
+                                          data.truckDetails?.name ?? '',
+                                          style: TextStyles().textStylesMontserrat(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                        overflow: TextOverflow.ellipsis,
                                       ),
-                                    ),
-                                    Text(
-                                      Utils().formattedDate(data.createdAt ?? ''),
-                                      style: TextStyles().textStylesMontserrat(
-                                        fontSize: 12,
-                                        color: AppColors.darkBlackGrey,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      AppStrings.dimentions,
-                                      style: TextStyles().textStylesMontserrat(
-                                        fontSize: 12,
-                                        color: AppColors.darkGrey,
-                                      ),
-                                    ),
-                                    Flexible(
-                                      child: Text(
-                                        ' ${data.truckDetails?.dimensions?.l ?? ''}'
-                                        ' ${'x'} '
-                                        '${data.truckDetails?.dimensions?.w ?? ''}'
-                                        ' ${'x'} '
-                                        '${data.truckDetails?.dimensions?.h ?? ''}'
-                                        ' ${'x'} '
-                                        'in foot',
+                                      Text(
+                                        Utils().formattedDate(data.createdAt ?? ''),
                                         style: TextStyles().textStylesMontserrat(
                                           fontSize: 12,
                                           color: AppColors.darkBlackGrey,
                                         ),
-                                        overflow: TextOverflow.ellipsis,
                                       ),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return Dimentions.sizedBox24H;
-                  },
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        AppStrings.dimentions,
+                                        style: TextStyles().textStylesMontserrat(
+                                          fontSize: 12,
+                                          color: AppColors.darkGrey,
+                                        ),
+                                      ),
+                                      Flexible(
+                                        child: Text(
+                                          ' ${data.truckDetails?.dimensions?.l ?? ''}'
+                                          ' ${'x'} '
+                                          '${data.truckDetails?.dimensions?.w ?? ''}'
+                                          ' ${'x'} '
+                                          '${data.truckDetails?.dimensions?.h ?? ''}'
+                                          ' ${'x'} '
+                                          'in foot',
+                                          style: TextStyles().textStylesMontserrat(
+                                            fontSize: 12,
+                                            color: AppColors.darkBlackGrey,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      );
+                    },
+                    separatorBuilder: (context, index) {
+                      return Dimentions.sizedBox24H;
+                    },
+                  ),
                 )
               ],
             );

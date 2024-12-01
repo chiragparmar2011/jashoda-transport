@@ -57,4 +57,15 @@ class AuthRepositoryImpl extends AuthBaseRepository {
     final result = ResponseDataObjectModel.fromJson(UserModel(), response.data);
     return result.data;
   }
+
+  @override
+  Future<UserModel?> updateUser(Map<String,dynamic> data) async {
+    final response = await networkApiService.patch(
+      endPoint: AppUrl.updateUser,
+      data: data
+    );
+
+    final result = ResponseDataObjectModel.fromJson(UserModel(), response.data);
+    return result.data;
+  }
 }

@@ -22,7 +22,6 @@ class MyRoutes {
   static const String homeScreen = '/homeScreen';
   static const String createCalculationScreen = '/createCalculationScreen';
   static const String savedCalculationScreen = '/savedCalculationScreen';
-  static const String newScreen = '/newScreen';
   static const String profileScreen = '/profileScreen';
   static const String editProfileScreen = '/editProfileScreen';
   static const String vehicleLoadedScreen = '/vehicleLoadedScreen';
