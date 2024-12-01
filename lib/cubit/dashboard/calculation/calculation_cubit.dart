@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jashoda_transport/core/error/error_handler.dart';
 import 'package:jashoda_transport/core/utils/app_enum.dart';
+import 'package:jashoda_transport/data/model/CreatLoadModel.dart';
 import 'package:jashoda_transport/data/model/load/calculation_model.dart';
 import 'package:jashoda_transport/data/model/load/dimension_model.dart';
 import 'package:jashoda_transport/data/model/new/box.dart';
@@ -16,6 +17,7 @@ class CalculationCubit extends Cubit<CalculationState> {
   TruckLoadRepositoryImpl truckLoadRepositoryImpl;
 
   int? age;
+
   // State variables
   List<DimensionModel> unitDimensionList = [
     DimensionModel(
@@ -83,12 +85,14 @@ class CalculationCubit extends Cubit<CalculationState> {
     final int width = int.tryParse(widthController.text) ?? 0;
     final int height = int.tryParse(heightController.text) ?? 0;
     final int quantity = int.tryParse(quantityController.text) ?? 0;
+    final int weight = int.tryParse(weightController.text) ?? 0;
 
     if (length > 0 && width > 0 && height > 0 && quantity > 0) {
       boxes.add(Box(
         length: length,
         width: width,
         height: height,
+        weight: weight,
         quantity: quantity,
         isStackable: isStackable,
       ));
@@ -155,6 +159,7 @@ class CalculationCubit extends Cubit<CalculationState> {
     widthController.clear();
     heightController.clear();
     quantityController.clear();
+    weightController.clear();
     isStackable = true;
   }
 
@@ -179,7 +184,7 @@ class CalculationCubit extends Cubit<CalculationState> {
   }
 
   List<TruckDetailModel>? truckDetailList = [];
-
+  Creatloadmodel? creatloadmodel;
   /// Save Calculation API CALl
   Future<void> fetchSaveCalculations(String userID) async {
     emit(SaveCalculationLoadingState());
@@ -188,6 +193,17 @@ class CalculationCubit extends Cubit<CalculationState> {
       emit(SaveCalculationLoadedState(truckDetailList));
     } catch (error) {
       emit(SaveCalculationErrorState(ErrorHandler.handle(error).failure.message));
+    }
+  }
+
+  Future<void> submitBox({String? userId}) async {
+    emit(SubmitBoxLoadingState());
+    try {
+      creatloadmodel = await truckLoadRepositoryImpl.submitBoxDataRepo(userId: userId,boxes: boxes);
+      emit(SubmitBoxLoadedState(creatloadmodel));
+
+    } catch (error) {
+      emit(SubmitBoxErrorState(ErrorHandler.handle(error).failure.message));
     }
   }
 }

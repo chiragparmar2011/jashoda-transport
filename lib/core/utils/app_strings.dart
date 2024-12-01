@@ -74,7 +74,7 @@ class AppStrings {
   static const String dimentions = 'Dimensions:';
   static const String weightCapacity = 'Weight Capacity';
   static const String date = 'Date';
-  static const String noOfBoxes = 'No. of boxes: 3';
+  // static const String noOfBoxes = 'No. of boxes: 3';
   static const String savedCalculation = 'Saved Calculations';
 
   /// Profile

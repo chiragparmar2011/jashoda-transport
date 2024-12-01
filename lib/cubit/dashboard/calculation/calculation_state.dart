@@ -39,6 +39,14 @@ final class SaveCalculationErrorState extends CalculationState {
 
 final class SubmitBoxLoadingState extends CalculationState {}
 
-final class SubmitBoxLoadedState extends CalculationState {}
+final class SubmitBoxLoadedState extends CalculationState {
+  Creatloadmodel? creatloadmodel;
 
-final class SubmitBoxErrorState extends CalculationState {}
+  SubmitBoxLoadedState(this.creatloadmodel);
+}
+
+final class SubmitBoxErrorState extends CalculationState {
+  final String error;
+
+  SubmitBoxErrorState(this.error);
+}
