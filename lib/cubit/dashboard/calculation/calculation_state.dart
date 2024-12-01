@@ -36,3 +36,9 @@ final class SaveCalculationErrorState extends CalculationState {
 
   SaveCalculationErrorState(this.error);
 }
+
+final class SubmitBoxLoadingState extends CalculationState {}
+
+final class SubmitBoxLoadedState extends CalculationState {}
+
+final class SubmitBoxErrorState extends CalculationState {}

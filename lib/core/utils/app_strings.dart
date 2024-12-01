@@ -62,6 +62,7 @@ class AppStrings {
   static const String enterLength = 'Enter Length';
   static const String enterWidth = 'Enter Width';
   static const String enterHeight = 'Enter Height';
+  static const String enterWeight = 'Enter Weight';
   static const String noOfQuantity = 'No. of quantity';
   static const String stackable = 'Stackable';
   static const String nonStackable = 'Non-Stackable';

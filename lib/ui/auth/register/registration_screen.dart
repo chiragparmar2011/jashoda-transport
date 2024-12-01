@@ -27,97 +27,102 @@ class RegistrationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      body: SingleChildScrollView(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            minWidth: MediaQuery.of(context).size.width,
-            minHeight: MediaQuery.of(context).size.height,
-          ),
-          child: IntrinsicHeight(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24,vertical: 24),
-              child: BlocConsumer<RegistrationCubit, RegistrationState>(
-                bloc: registrationCubit,
-                listener: (context, state) {
-                  if (state is RegisterSuccessState) {
-                    Navigator.pushNamed(context, MyRoutes.dashboardScreen);
-                  }
-                  if (state is RegisterFailedState) {
-                    Utils.errorMessage(context, state.error ?? '');
-                  }
-                },
-                builder: (context, state) {
-                  return Form(
-                    key: registrationCubit.formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Dimentions.sizedBox24H,
-                        BackArrowWidget(
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
+      body: BlocConsumer<RegistrationCubit, RegistrationState>(
+        listener: (context, state) {
+          if (state is RegisterSuccessState) {
+            Navigator.pushNamed(context, MyRoutes.dashboardScreen);
+          }
+        },
+        builder: (context, state) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minWidth: MediaQuery.of(context).size.width,
+                minHeight: MediaQuery.of(context).size.height,
+              ),
+              child: IntrinsicHeight(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+                  child: BlocConsumer<RegistrationCubit, RegistrationState>(
+                    bloc: registrationCubit,
+                    listener: (context, state) {
+                      if (state is RegisterSuccessState) {
+                        Navigator.pushNamed(context, MyRoutes.dashboardScreen);
+                      }
+                      if (state is RegisterFailedState) {
+                        Utils.errorMessage(context, state.error ?? '');
+                      }
+                    },
+                    builder: (context, state) {
+                      return Form(
+                        key: registrationCubit.formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Dimentions.sizedBox24H,
+                            BackArrowWidget(
+                              onTap: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            Dimentions.sizedBox16H,
+                            Text(
+                              AppStrings.registerYourSelf,
+                              style: TextStyles().textStylesNunito(
+                                fontSize: 32,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.primaryBlue,
+                              ),
+                            ),
+                            Dimentions.sizedBox4H,
+                            Text(
+                              AppStrings.registerContent,
+                              style: TextStyles().textStylesMontserrat(
+                                fontSize: 12,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            Dimentions.sizedBox32H,
+                            FullNameWidget(
+                              controller: registrationCubit.fullNameController,
+                            ),
+                            Dimentions.sizedBox24H,
+                            EmailAddressWidget(
+                              controller: registrationCubit.emailAddController,
+                            ),
+                            Dimentions.sizedBox24H,
+                            CompanyNameWidget(
+                              controller: registrationCubit.companyNameController,
+                            ),
+                            Dimentions.sizedBox24H,
+                            IndustryTypeWidget(
+                              controller: registrationCubit.industryTypeController,
+                            ),
+                            const Spacer(),
+                            CustomButtonWidget(
+                              title: AppStrings.registerNow,
+                              onPressed: () {
+                                if (registrationCubit.formKey.currentState!.validate()) {
+                                  registrationCubit.registerUser(
+                                    name: registrationCubit.fullNameController.text,
+                                    email: registrationCubit.emailAddController.text,
+                                    companyName: registrationCubit.companyNameController.text,
+                                    industryType: registrationCubit.industryTypeController.text,
+                                  );
+                                }
+                              },
+                              isLoading: state is RegisterLoadingState ? true : false,
+                            ),
+                          ],
                         ),
-                        Dimentions.sizedBox16H,
-                        Text(
-                          AppStrings.registerYourSelf,
-                          style: TextStyles().textStylesNunito(
-                            fontSize: 32,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.primaryBlue,
-                          ),
-                        ),
-                        Dimentions.sizedBox4H,
-                        Text(
-                          AppStrings.registerContent,
-                          style: TextStyles().textStylesMontserrat(
-                            fontSize: 12,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        Dimentions.sizedBox32H,
-                        FullNameWidget(
-                          controller: registrationCubit.fullNameController,
-                        ),
-                        Dimentions.sizedBox24H,
-                        EmailAddressWidget(
-                          controller: registrationCubit.emailAddController,
-                        ),
-                        Dimentions.sizedBox24H,
-                        CompanyNameWidget(
-                          controller: registrationCubit.companyNameController,
-                        ),
-                        Dimentions.sizedBox24H,
-                        IndustryTypeWidget(
-                          controller: registrationCubit.industryTypeController,
-                        ),
-                        const Spacer(),
-                        CustomButtonWidget(
-                          title: AppStrings.registerNow,
-                          onPressed: () {
-                            // if (registrationCubit.formKey.currentState!.validate()) {
-                            //   registrationCubit.registerUser(
-                            //     name: registrationCubit.fullNameController.text,
-                            //     email:
-                            //         registrationCubit.emailAddController.text,
-                            //     companyName: registrationCubit
-                            //         .companyNameController.text,
-                            //     industryType: registrationCubit
-                            //         .industryTypeController.text,
-                            //   );
-                            // }
-                            Navigator.pushNamed(context, MyRoutes.dashboardScreen);
-                          },
-                          isLoading: state is RegisterLoadingState ? true : false,
-                        ),
-                      ],
-                    ),
-                  );
-                },
+                      );
+                    },
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

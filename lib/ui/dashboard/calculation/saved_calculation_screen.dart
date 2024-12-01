@@ -24,7 +24,8 @@ class _SavedCalculationScreenState extends State<SavedCalculationScreen> {
 
   @override
   void initState() {
-    calculationCubit.fetchSaveCalculations('6744b9f4a07f02312a804606');
+    // calculationCubit.fetchSaveCalculations('6744b9f4a07f02312a804606');
+    calculationCubit.fetchSaveCalculations('674c4ea08940a71eee7a1a33');
     super.initState();
   }
 
@@ -35,6 +36,7 @@ class _SavedCalculationScreenState extends State<SavedCalculationScreen> {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
         child: BlocConsumer<CalculationCubit, CalculationState>(
+          bloc: calculationCubit,
           listener: (context, state) {
             if (state is SaveCalculationLoadingState) {
               const CommonProgressIndicator(
@@ -46,6 +48,13 @@ class _SavedCalculationScreenState extends State<SavedCalculationScreen> {
             }
           },
           builder: (context, state) {
+            if (state is SaveCalculationLoadingState) {
+              return const Center(
+                child: CommonProgressIndicator(
+                  color: AppColors.primaryBlue,
+                ),
+              );
+            }
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -61,8 +70,7 @@ class _SavedCalculationScreenState extends State<SavedCalculationScreen> {
                   itemCount: (calculationCubit.truckDetailList ?? []).length,
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    TruckDetailModel data =
-                    (calculationCubit.truckDetailList ?? [])[index];
+                    TruckDetailModel data = (calculationCubit.truckDetailList ?? [])[index];
                     return Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 24,
@@ -92,14 +100,12 @@ class _SavedCalculationScreenState extends State<SavedCalculationScreen> {
                                   ),
                                 ),
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Flexible(
                                       child: Text(
                                         data.truckDetails?.name ?? '',
-                                        style:
-                                            TextStyles().textStylesMontserrat(
+                                        style: TextStyles().textStylesMontserrat(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w700,
                                         ),
@@ -107,10 +113,8 @@ class _SavedCalculationScreenState extends State<SavedCalculationScreen> {
                                       ),
                                     ),
                                     Text(
-                                      Utils().formattedDate(
-                                          data.createdAt ?? ''),
-                                      style:
-                                          TextStyles().textStylesMontserrat(
+                                      Utils().formattedDate(data.createdAt ?? ''),
+                                      style: TextStyles().textStylesMontserrat(
                                         fontSize: 12,
                                         color: AppColors.darkBlackGrey,
                                       ),
@@ -121,8 +125,7 @@ class _SavedCalculationScreenState extends State<SavedCalculationScreen> {
                                   children: [
                                     Text(
                                       AppStrings.dimentions,
-                                      style:
-                                          TextStyles().textStylesMontserrat(
+                                      style: TextStyles().textStylesMontserrat(
                                         fontSize: 12,
                                         color: AppColors.darkGrey,
                                       ),
@@ -136,8 +139,7 @@ class _SavedCalculationScreenState extends State<SavedCalculationScreen> {
                                         '${data.truckDetails?.dimensions?.h ?? ''}'
                                         ' ${'x'} '
                                         'in foot',
-                                        style:
-                                            TextStyles().textStylesMontserrat(
+                                        style: TextStyles().textStylesMontserrat(
                                           fontSize: 12,
                                           color: AppColors.darkBlackGrey,
                                         ),

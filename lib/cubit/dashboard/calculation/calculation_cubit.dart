@@ -46,10 +46,10 @@ class CalculationCubit extends Cubit<CalculationState> {
   final TextEditingController lengthController = TextEditingController();
   final TextEditingController widthController = TextEditingController();
   final TextEditingController heightController = TextEditingController();
+  final TextEditingController weightController = TextEditingController();
   final TextEditingController quantityController = TextEditingController();
 
   bool isStackable = true;
-
 
   // Emit dimension changes
   void updateDimensions(bool isSelectedValue, int index) {
@@ -108,6 +108,16 @@ class CalculationCubit extends Cubit<CalculationState> {
   void resetBoxes() {
     boxes.clear();
     isAddingBox = false;
+    emit(BoxFlowState(
+      boxes: List.from(boxes),
+      isAddingBox: isAddingBox,
+      isStackable: isStackable,
+    ));
+  }
+
+  /// Remove a box by index
+  void removeBox(int index) {
+    final updatedBoxes = boxes.removeAt(index);
     emit(BoxFlowState(
       boxes: List.from(boxes),
       isAddingBox: isAddingBox,

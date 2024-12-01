@@ -76,7 +76,7 @@ class OnboardWidget extends StatelessWidget {
             Text(
               contentText,
               style: TextStyles().textStylesMontserrat(
-                fontSize: 16,
+                fontSize: 14,
               ),
               textAlign: TextAlign.center,
             ),

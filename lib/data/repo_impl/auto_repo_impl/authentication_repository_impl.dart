@@ -49,7 +49,7 @@ class AuthRepositoryImpl extends AuthBaseRepository {
   }
 
   @override
-  Future<UserModel?> register(Map<String, dynamic> data) async {
+  Future<UserModel?>  register(Map<String, dynamic> data) async {
     final response = await networkApiService.post(
       endPoint: AppUrl.register,
       data: data,
