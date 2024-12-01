@@ -35,6 +35,18 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  get_it: ^8.0.2
+  flutter_bloc: ^8.1.6
+  flutter_svg: ^2.0.14
+  smooth_page_indicator: ^1.2.0+3
+  pinput: ^5.0.0
+  flutter_screenutil: ^5.9.3
+  shared_preferences: ^2.3.3
+  dio: ^5.7.0
+  equatable: ^2.0.7
+  pretty_dio_logger: ^1.4.0
+  jwt_decoder: ^2.0.1
+  intl: ^0.20.1
 
 dev_dependencies:
   flutter_test:
@@ -52,6 +64,23 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  assets:
+    - assets/icons/
+    - assets/images/
+
+
+
+  fonts:
+    - family: Nunito
+      fonts:
+        - asset: assets/fonts/nunito/Nunito-Bold.ttf
+          weight: 400
+
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/montserrat/Montserrat-Regular.ttf
+          weight: 400
+
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
