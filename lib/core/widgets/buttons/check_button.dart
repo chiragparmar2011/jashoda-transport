@@ -50,17 +50,16 @@ class CheckButton extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
       children: [
         iconWidget ?? const SizedBox.shrink(),
-        Dimentions.sizedBox12W,
-        Expanded(
-          child: Text(
-            title,
-            style: TextStyles().textStylesMontserrat(
-              fontSize: 14,
-              color: textColor
-            ),
+        Text(
+          title,
+          style: TextStyles().textStylesMontserrat(
+            fontSize: 14,
+            color: textColor,
           ),
+          textAlign: TextAlign.center,
         ),
       ],
     );

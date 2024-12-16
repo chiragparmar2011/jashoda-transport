@@ -57,7 +57,7 @@ class OnboardCubit extends Cubit<OnboardState> {
       case 1:
         return AssetsPath.calculator;
       case 2:
-        return AssetsPath.shipping;
+        return AssetsPath.truck;
       case 3:
         return AssetsPath.time;
       default:

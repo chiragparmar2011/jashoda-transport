@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jashoda_transport/core/helper/shared_preference.dart';
 import 'package:jashoda_transport/core/utils/app_assets.dart';
 import 'package:jashoda_transport/core/utils/app_colors.dart';
 import 'package:jashoda_transport/core/utils/app_strings.dart';
@@ -21,11 +22,13 @@ class SavedCalculationScreen extends StatefulWidget {
 
 class _SavedCalculationScreenState extends State<SavedCalculationScreen> {
   final CalculationCubit calculationCubit = injector<CalculationCubit>();
+  String id = '';
+  final _prefs = injector.get<SharedPreferenceHelper>();
 
   @override
   void initState() {
-    // calculationCubit.fetchSaveCalculations('6744b9f4a07f02312a804606');
-    calculationCubit.fetchSaveCalculations('6744b9f4a07f02312a804606');
+    id = _prefs.getString('id');
+    calculationCubit.fetchSaveCalculations(id);
     super.initState();
   }
 
@@ -44,7 +47,17 @@ class _SavedCalculationScreenState extends State<SavedCalculationScreen> {
               );
             }
             if (state is SaveCalculationErrorState) {
-              Utils.errorMessage(context, state.error);
+              Center(
+                child: Text(
+                  state.error,
+                  style: TextStyles().textStylesMontserrat(
+                    fontSize: 18,
+                    color: AppColors.darkGrey,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              );
+              // Utils.errorMessage(context, state.error);
             }
           },
           builder: (context, state) {
@@ -52,6 +65,18 @@ class _SavedCalculationScreenState extends State<SavedCalculationScreen> {
               return const Center(
                 child: CommonProgressIndicator(
                   color: AppColors.primaryBlue,
+                ),
+              );
+            }
+            if (state is SaveCalculationErrorState) {
+              return Center(
+                child: Text(
+                  state.error,
+                  style: TextStyles().textStylesMontserrat(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
               );
             }
@@ -71,7 +96,8 @@ class _SavedCalculationScreenState extends State<SavedCalculationScreen> {
                     itemCount: (calculationCubit.truckDetailList ?? []).length,
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
-                      TruckDetailModel data = (calculationCubit.truckDetailList ?? [])[index];
+                      TruckDetailModel data =
+                          (calculationCubit.truckDetailList ?? [])[index];
                       return Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 24,
@@ -84,7 +110,7 @@ class _SavedCalculationScreenState extends State<SavedCalculationScreen> {
                         child: Row(
                           children: [
                             ImageAssets(
-                              image: AssetsPath.shipping,
+                              image: AssetsPath.deliveryTruckIcon,
                               height: 48,
                               width: 48,
                             ),
@@ -101,12 +127,14 @@ class _SavedCalculationScreenState extends State<SavedCalculationScreen> {
                                     ),
                                   ),
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Flexible(
                                         child: Text(
                                           data.truckDetails?.name ?? '',
-                                          style: TextStyles().textStylesMontserrat(
+                                          style:
+                                              TextStyles().textStylesMontserrat(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w700,
                                           ),
@@ -114,7 +142,9 @@ class _SavedCalculationScreenState extends State<SavedCalculationScreen> {
                                         ),
                                       ),
                                       Text(
-                                        Utils().formattedDate(data.createdAt ?? ''),
+                                        (data.createdAt != null && data.createdAt!.isNotEmpty)
+                                            ? Utils().formattedDate(data.createdAt ?? '')
+                                            : 'Date Not Available',
                                         style: TextStyles().textStylesMontserrat(
                                           fontSize: 12,
                                           color: AppColors.darkBlackGrey,
@@ -126,7 +156,8 @@ class _SavedCalculationScreenState extends State<SavedCalculationScreen> {
                                     children: [
                                       Text(
                                         AppStrings.dimentions,
-                                        style: TextStyles().textStylesMontserrat(
+                                        style:
+                                            TextStyles().textStylesMontserrat(
                                           fontSize: 12,
                                           color: AppColors.darkGrey,
                                         ),
@@ -140,7 +171,8 @@ class _SavedCalculationScreenState extends State<SavedCalculationScreen> {
                                           '${data.truckDetails?.dimensions?.h ?? ''}'
                                           ' ${'x'} '
                                           'in foot',
-                                          style: TextStyles().textStylesMontserrat(
+                                          style:
+                                              TextStyles().textStylesMontserrat(
                                             fontSize: 12,
                                             color: AppColors.darkBlackGrey,
                                           ),

@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jashoda_transport/core/error/error_handler.dart';
 import 'package:jashoda_transport/core/helper/shared_preference.dart';
@@ -23,8 +23,23 @@ class EditProfileCubit extends Cubit<EditProfileState> {
   TextEditingController companyNameController = TextEditingController();
   TextEditingController industryTypeController = TextEditingController();
   UserModel? userModel;
+  String id = '';
+  String userName = '';
   String profilePicture = "";
   final prefs = injector<SharedPreferenceHelper>();
+
+  Future<void> fetchUserDetail({required String userId}) async {
+    emit(FetchUserDetailLoadingState());
+    try {
+      UserModel? data = await authRepositoryImpl.fetchUserDetail(userId);
+      if (data != null) {
+        userModel = data;
+      }
+      emit(FetchUserDetailSuccessState(data));
+    } catch (error) {
+      emit(FetchUserDetailErrorState(ErrorHandler.handle(error).failure.message));
+    }
+  }
 
   Future<void> updateUser({
     required String userId,
@@ -50,7 +65,6 @@ class EditProfileCubit extends Cubit<EditProfileState> {
     }
   }
 
-
   Future<void> pickImage() async {
     try {
       final ImagePicker picker = ImagePicker();
@@ -64,8 +78,8 @@ class EditProfileCubit extends Cubit<EditProfileState> {
         final String mimeType = extension == 'jpg' || extension == 'jpeg'
             ? 'image/jpeg'
             : extension == 'png'
-            ? 'image/png'
-            : 'image';
+                ? 'image/png'
+                : 'image';
 
         profilePicture = "data:$mimeType;base64,${base64Encode(bytes)}";
         emit(EditProfileInitial());
@@ -74,6 +88,4 @@ class EditProfileCubit extends Cubit<EditProfileState> {
       emit(EditProfileErrorState("Failed to pick image: ${error.toString()}"));
     }
   }
-
-
 }

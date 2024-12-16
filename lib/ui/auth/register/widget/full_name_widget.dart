@@ -27,7 +27,7 @@ class FullNameWidget extends StatelessWidget {
         Dimentions.sizedBox4H,
         CommonTextField(
           controller: controller,
-          hintText: 'eg. Mansi Darji',
+          hintText: AppStrings.enterFullName,
           prefixIconButton: ImageAssets(image: AssetsPath.personIcon),
           validator: (value) {
             return Utils().requiredValidator(value ?? '');

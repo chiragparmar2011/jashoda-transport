@@ -15,9 +15,7 @@ class CalculationCubit extends Cubit<CalculationState> {
 
   TruckLoadRepositoryImpl truckLoadRepositoryImpl;
 
-  int? age;
-
-  // State variables
+  int? dimension = DimensionUnits.cm.index;
   List<DimensionModel> unitDimensionList = [
     DimensionModel(
       'inch',
@@ -36,14 +34,18 @@ class CalculationCubit extends Cubit<CalculationState> {
     ),
     DimensionModel(
       'cm',
-      false,
+      true,
       DimensionUnits.cm.index,
     ),
   ];
+
   final List<Box> boxes = [];
+  int nextBoxNumber = 1;
   bool isAddingBox = false;
 
-  // Controllers
+  List<TruckDetailModel>? truckDetailList = [];
+  CreateLoadModel? createLoadModel;
+
   final TextEditingController lengthController = TextEditingController();
   final TextEditingController widthController = TextEditingController();
   final TextEditingController heightController = TextEditingController();
@@ -52,41 +54,76 @@ class CalculationCubit extends Cubit<CalculationState> {
 
   bool isStackable = true;
 
-  // Emit dimension changes
   void updateDimensions(bool isSelectedValue, int index) {
-    unitDimensionList[index].isSelected = !isSelectedValue;
     if (unitDimensionList[index].isSelected) {
-      age = unitDimensionList[index].type;
-    } else {
-      age = null;
+      return;
     }
+
+    String oldDimension = unitDimensionList.firstWhere((unit) => unit.isSelected).name;
+    String newDimension = unitDimensionList[index].name;
+
+    unitDimensionList[index].isSelected = true;
+    dimension = unitDimensionList[index].type;
+
     for (var i = 0; i < unitDimensionList.length; i++) {
       if (i != index) {
         unitDimensionList[i].isSelected = false;
       }
     }
+
+    if (lengthController.text.isNotEmpty) {
+      lengthController.text = convertUnit(
+        double.tryParse(lengthController.text) ?? 0,
+        oldDimension,
+        newDimension,
+      ).toStringAsFixed(2);
+    }
+
+    if (widthController.text.isNotEmpty) {
+      widthController.text = convertUnit(
+        double.tryParse(widthController.text) ?? 0,
+        oldDimension,
+        newDimension,
+      ).toStringAsFixed(2);
+    }
+
+    if (heightController.text.isNotEmpty) {
+      heightController.text = convertUnit(
+        double.tryParse(heightController.text) ?? 0,
+        oldDimension,
+        newDimension,
+      ).toStringAsFixed(2);
+    }
+
+    weightController.text = weightController.text;
+    quantityController.text = quantityController.text;
+
     emit(DimensionDataChangeState(unitDimensionList[index].isSelected));
   }
 
-  // Start adding a new box
-  void startAddingBox() {
-    isAddingBox = true;
-    emit(BoxFlowState(
-      boxes: List.from(boxes),
-      isAddingBox: isAddingBox,
-      isStackable: isStackable,
-    ));
-  }
-
-  // Save a box
   void saveBox() {
-    final int length = int.tryParse(lengthController.text) ?? 0;
-    final int width = int.tryParse(widthController.text) ?? 0;
-    final int height = int.tryParse(heightController.text) ?? 0;
-    final int quantity = int.tryParse(quantityController.text) ?? 0;
-    final int weight = int.tryParse(weightController.text) ?? 0;
+    final double? lengthValue = double.tryParse(lengthController.text);
+    final double? widthValue = double.tryParse(widthController.text);
+    final double? heightValue = double.tryParse(heightController.text);
+    final double? quantityValue = double.tryParse(quantityController.text);
+    final double? weightValue = double.tryParse(weightController.text);
 
-    if (length > 0 && width > 0 && height > 0 && quantity > 0) {
+    if (lengthValue == null ||
+        widthValue == null ||
+        heightValue == null ||
+        quantityValue == null ||
+        weightValue == null) {
+      emit(SaveBoxErrorState('Please fill all fields.'));
+      return;
+    }
+
+    final int length = (lengthValue > 0) ? lengthValue.round() : 1;
+    final int width = (widthValue > 0) ? widthValue.round() : 1;
+    final int height = (heightValue > 0) ? heightValue.round() : 1;
+    final int quantity = (quantityValue > 0) ? quantityValue.round() : 1;
+    final int weight = (weightValue > 0) ? weightValue.round() : 1;
+
+    if (length > 0 && width > 0 && height > 0 && quantity > 0 && weight > 0) {
       boxes.add(Box(
         length: length,
         width: width,
@@ -95,19 +132,40 @@ class CalculationCubit extends Cubit<CalculationState> {
         quantity: quantity,
         isStackable: isStackable,
       ));
+
       isAddingBox = false;
+      nextBoxNumber++;
       clearForm();
       emit(BoxFlowState(
         boxes: List.from(boxes),
         isAddingBox: isAddingBox,
         isStackable: isStackable,
       ));
-    } else {
-      // Trigger an error state or use a listener in the UI
     }
   }
 
-  // Reset all boxes
+  double convertUnit(double value, String fromUnit, String toUnit) {
+    const conversionRates = {
+      'cm_to_inch': 0.393701,
+      'cm_to_mm': 10,
+      'cm_to_feet': 0.0328084,
+      'inch_to_cm': 2.54,
+      'inch_to_mm': 25.4,
+      'inch_to_feet': 0.0833333,
+      'mm_to_cm': 0.1,
+      'mm_to_inch': 0.0393701,
+      'mm_to_feet': 0.00328084,
+      'feet_to_cm': 30.48,
+      'feet_to_inch': 12,
+      'feet_to_mm': 304.8,
+    };
+
+    if (fromUnit == toUnit) return value;
+
+    final key = '${fromUnit}_to_$toUnit';
+    return value * (conversionRates[key] ?? 1);
+  }
+
   void resetBoxes() {
     boxes.clear();
     isAddingBox = false;
@@ -118,9 +176,8 @@ class CalculationCubit extends Cubit<CalculationState> {
     ));
   }
 
-  /// Remove a box by index
   void removeBox(int index) {
-    final updatedBoxes = boxes.removeAt(index);
+    boxes.removeAt(index);
     emit(BoxFlowState(
       boxes: List.from(boxes),
       isAddingBox: isAddingBox,
@@ -139,20 +196,6 @@ class CalculationCubit extends Cubit<CalculationState> {
     );
   }
 
-  // Submit boxes
-  void submitBoxes() {
-    // Handle box submission logic
-    // Navigate to next screen with _boxes data
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => NextScreen(boxes: _boxes),
-    //   ),
-    // );
-    print("Submitted Boxes: $boxes");
-  }
-
-  // Clear form
   void clearForm() {
     lengthController.clear();
     widthController.clear();
@@ -162,7 +205,6 @@ class CalculationCubit extends Cubit<CalculationState> {
     isStackable = true;
   }
 
-  // Update stackable status
   void updateStackable(bool value) {
     isStackable = value;
     emit(BoxFlowState(
@@ -172,34 +214,28 @@ class CalculationCubit extends Cubit<CalculationState> {
     ));
   }
 
-  // Delete a box
-  void deleteBox(int index) {
-    boxes.removeAt(index);
-    emit(BoxFlowState(
-      boxes: List.from(boxes),
-      isAddingBox: isAddingBox,
-      isStackable: isStackable,
-    ));
-  }
-
-  List<TruckDetailModel>? truckDetailList = [];
-  CreateLoadModel? creatloadmodel;
-  /// Save Calculation API CALl
   Future<void> fetchSaveCalculations(String userID) async {
     emit(SaveCalculationLoadingState());
     try {
       truckDetailList = await truckLoadRepositoryImpl.savedCalculation(userID);
       emit(SaveCalculationLoadedState(truckDetailList));
     } catch (error) {
-      emit(SaveCalculationErrorState(ErrorHandler.handle(error).failure.message));
+      emit(SaveCalculationErrorState(
+          ErrorHandler.handle(error).failure.message));
     }
   }
 
   Future<void> submitBox({String? userId}) async {
     emit(SubmitBoxLoadingState());
     try {
-      creatloadmodel = await truckLoadRepositoryImpl.submitBoxDataRepo(userId: userId,boxes: boxes);
-      emit(SubmitBoxLoadedState(creatloadmodel));
+      createLoadModel = await truckLoadRepositoryImpl.submitBoxDataRepo(
+        userId: userId,
+        boxes: boxes,
+      );
+      nextBoxNumber = 1;
+      if (createLoadModel != null) {
+        emit(SubmitBoxLoadedState(createLoadModel));
+      }
     } catch (error) {
       emit(SubmitBoxErrorState(ErrorHandler.handle(error).failure.message));
     }

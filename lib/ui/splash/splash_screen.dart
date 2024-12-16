@@ -18,17 +18,17 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 4), () {
       getUserDetail();
     });
     super.initState();
   }
 
-  void getUserDetail() async {
-    if (_prefs.getUser() != null) {
+  void getUserDetail() {
+    if (_prefs.getBool('isLoggedId') == true) {
       navigationTo(MyRoutes.dashboardScreen);
     } else {
-      navigationTo(MyRoutes.onboardScreen);
+      navigationTo(MyRoutes.inputMoNumberScreen);
     }
   }
 
@@ -44,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
         padding: const EdgeInsets.symmetric(vertical: 24),
         child: Center(
           child: ImageAssets(
-            image: AssetsPath.splash,
+            image: AssetsPath.tapLoadAnimationGIF,
             height: 230,
             width: 370,
           ),

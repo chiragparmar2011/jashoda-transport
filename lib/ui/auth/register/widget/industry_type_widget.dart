@@ -27,7 +27,7 @@ class IndustryTypeWidget extends StatelessWidget {
         Dimentions.sizedBox4H,
         CommonTextField(
           controller: controller,
-          hintText: 'eg. Fashion',
+          hintText: AppStrings.enterIndustryType,
           prefixIconButton: ImageAssets(image: AssetsPath.industryIcon),
           validator: (value) {
             return Utils().requiredValidator(value ?? '');

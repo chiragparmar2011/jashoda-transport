@@ -28,7 +28,7 @@ class EmailAddressWidget extends StatelessWidget {
         Dimentions.sizedBox4H,
         CommonTextField(
           controller: controller,
-          hintText: 'eg. mansi@gmail.com',
+          hintText: AppStrings.enterEmailAddress,
           prefixIconButton: ImageAssets(image: AssetsPath.emailIcon),
           validator: (value) {
             return Utils().emailValidator(value ?? '');

@@ -73,7 +73,7 @@ class EnterMoNumberScreen extends StatelessWidget {
                           Dimentions.sizedBox16H,
                           Center(
                             child: ImageAssets(
-                              image: AssetsPath.avtar,
+                              image: AssetsPath.mobileOne,
                               height: 240,
                               width: 240,
                             ),
@@ -123,7 +123,7 @@ class EnterMoNumberScreen extends StatelessWidget {
                           const Spacer(),
                           Center(
                             child: Text(
-                              'By continuing you agree with',
+                              AppStrings.agreeWith,
                               style: TextStyles().textStylesMontserrat(
                                 fontSize: 12,
                               ),
@@ -132,21 +132,21 @@ class EnterMoNumberScreen extends StatelessWidget {
                           Center(
                             child: RichText(
                               text: TextSpan(
-                                text: 'Privacy Policy',
+                                text: AppStrings.privacyPolicy,
                                 style: TextStyles().textStylesMontserrat(
                                   fontSize: 12,
                                   color: AppColors.primaryBlue,
                                 ),
                                 children: [
                                   TextSpan(
-                                    text: ' & ',
+                                    text: AppStrings.endSymbol,
                                     style: TextStyles().textStylesMontserrat(
                                       fontSize: 12,
                                       color: AppColors.black,
                                     ),
                                   ),
                                   TextSpan(
-                                    text: 'Terms and conditions.',
+                                    text: AppStrings.termsNCondition,
                                     style: TextStyles().textStylesMontserrat(
                                       fontSize: 12,
                                       color: AppColors.primaryBlue,

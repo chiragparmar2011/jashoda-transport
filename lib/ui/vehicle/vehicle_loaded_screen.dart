@@ -58,7 +58,7 @@ class _VehicleLoadedScreenState extends State<VehicleLoadedScreen> {
                     ),
                   ),
                   child: ImageAssets(
-                    image: AssetsPath.shipping,
+                    image: AssetsPath.deliveryTruckIcon,
                     height: 180,
                     width: 180,
                   ),
@@ -73,7 +73,7 @@ class _VehicleLoadedScreenState extends State<VehicleLoadedScreen> {
                   ),
                 ),
                 Text(
-                  widget.createLoadModel!.truckDetails!.truckName.toString(),
+                  widget.createLoadModel?.truckDetails?.truckName ?? '',
                   style: TextStyles().textStylesNunito(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -89,7 +89,7 @@ class _VehicleLoadedScreenState extends State<VehicleLoadedScreen> {
                   ),
                 ),
                 Text(
-                  '${widget.createLoadModel!.truckDetails!.dimensions?.l.toString()} L X ${widget.createLoadModel!.truckDetails!.dimensions?.w.toString()} W X ${widget.createLoadModel!.truckDetails!.dimensions?.h.toString()} H (in foot)',
+                  '${widget.createLoadModel?.truckDetails?.dimensions?.l.toString()} L X ${widget.createLoadModel?.truckDetails?.dimensions?.w.toString()} W X ${widget.createLoadModel?.truckDetails!.dimensions?.h.toString()} H (in foot)',
                   style: TextStyles().textStylesNunito(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -141,14 +141,14 @@ class _VehicleLoadedScreenState extends State<VehicleLoadedScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "No. of boxes: ${widget.createLoadModel!.boxDetails?.totalBoxes.toString()}",
+                      "No. of boxes: ${widget.createLoadModel?.boxDetails?.totalBoxes.toString()}",
                       style: TextStyles().textStylesMontserrat(
                         fontSize: 12,
                         color: AppColors.darkGrey,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    ...?widget.createLoadModel!.boxDetails?.boxes?.map((box) {
+                    ...?widget.createLoadModel?.boxDetails?.boxes?.map((box) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 4.0),
                         child: Row(

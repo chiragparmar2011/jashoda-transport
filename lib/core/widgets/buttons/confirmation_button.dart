@@ -13,6 +13,7 @@ class ConfirmationButton extends StatelessWidget {
   final Color? foregroundColor;
   final Color? backgroundColor;
   final bool isLoading;
+  final bool isConfirm;
 
   const ConfirmationButton({
     super.key,
@@ -24,6 +25,7 @@ class ConfirmationButton extends StatelessWidget {
     this.foregroundColor = AppColors.primaryBlue,
     this.backgroundColor = AppColors.white,
     this.isLoading = false,
+    this.isConfirm = false,
   });
 
   @override
@@ -32,7 +34,7 @@ class ConfirmationButton extends StatelessWidget {
       width: width,
       height: height,
       child: TextButton(
-        onPressed: isLoading ? null :onPressed,
+        onPressed: isLoading ? null : onPressed,
         style: TextButton.styleFrom(
           padding: EdgeInsets.zero,
           backgroundColor: foregroundColor,
@@ -41,7 +43,11 @@ class ConfirmationButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
         ),
-        child: isLoading ? _buildProgressIndicator() : _buildRow(),
+        child: isLoading
+            ? _buildProgressIndicator()
+            : isConfirm
+                ? _buildConfirmText()
+                : _buildRow(),
       ),
     );
   }
@@ -64,6 +70,15 @@ class ConfirmationButton extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildConfirmText() {
+    return Text(
+      title,
+      style: TextStyles().textStylesMontserrat(
+        fontSize: 16,
+      ),
     );
   }
 }

@@ -50,3 +50,9 @@ final class SubmitBoxErrorState extends CalculationState {
 
   SubmitBoxErrorState(this.error);
 }
+
+final class SaveBoxErrorState extends CalculationState {
+  final String error;
+
+  SaveBoxErrorState(this.error);
+}

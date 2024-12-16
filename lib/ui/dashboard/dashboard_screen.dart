@@ -30,7 +30,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             case BottomNavItem.calculation:
               return const SavedCalculationScreen();
             case BottomNavItem.newly:
-              return CreateNewCalculationScreen();
+              return const CreateNewCalculationScreen();
             case BottomNavItem.profile:
               return const ProfileScreen();
           }

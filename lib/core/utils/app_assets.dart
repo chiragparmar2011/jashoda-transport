@@ -1,9 +1,14 @@
 class AssetsPath {
   static String avtar = 'assets/images/avtar.jpg';
   static String backArrow = 'assets/icons/backArrow.svg';
+  static String tapLoadAnimationGIF = 'assets/gif/tap_load_animation.gif';
 
   /// Splash
   static String splash = 'assets/images/splash.svg';
+
+  /// Login
+  static String mobileOne = 'assets/icons/mobile_one.svg';
+  static String mobileTwo = 'assets/icons/mobile_two.svg';
 
   /// OnBoarding
   static String shipping = 'assets/images/shipping.svg';

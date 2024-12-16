@@ -5,6 +5,7 @@ class AppUrl {
   static const String sendOTP = "/auth/send-otp";
   static const String register = "/auth/register";
   static const String verifyOTP = "/auth/verify-otp";
+  static const String getUser = "/auth/get-user-by-id";
   static const String updateUser = "/auth/user-update";
   static const String recentCalculation = "/truck-load/get-recent-truck-details";
   static const String loadCalculation = "/truck-load/create-load-calculation";

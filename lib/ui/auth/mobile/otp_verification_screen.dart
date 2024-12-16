@@ -18,11 +18,11 @@ class OtpVerificationScreen extends StatelessWidget {
   OtpVerificationScreen({required this.phoneNumber, super.key});
 
   final String phoneNumber;
-  final OtpVerificationCubit otpVerificationCubit =
-      injector<OtpVerificationCubit>();
+  final OtpVerificationCubit otpVerificationCubit = injector<OtpVerificationCubit>();
 
   @override
   Widget build(BuildContext context) {
+    otpVerificationCubit.startResendOtpTimer();
     return Scaffold(
       backgroundColor: AppColors.white,
       body: SingleChildScrollView(
@@ -36,7 +36,8 @@ class OtpVerificationScreen extends StatelessWidget {
                 if (state.isRegistered) {
                   Navigator.pushNamed(context, MyRoutes.dashboardScreen);
                 } else {
-                  Navigator.pushNamed(context, MyRoutes.registrationScreen).then((value) {
+                  Navigator.pushNamed(context, MyRoutes.registrationScreen)
+                      .then((value) {
                     otpVerificationCubit.otpVerificationController.clear();
                   });
                 }
@@ -46,6 +47,13 @@ class OtpVerificationScreen extends StatelessWidget {
               }
             },
             builder: (context, state) {
+              int timerValue = 30;
+              bool showResendOtp = false;
+
+              if (state is OtpVerificationTimerState) {
+                timerValue = state.remainingTime;
+                showResendOtp = state.canResendOtp;
+              }
               return Form(
                 key: otpVerificationCubit.formKey,
                 child: Column(
@@ -60,7 +68,7 @@ class OtpVerificationScreen extends StatelessWidget {
                     Dimentions.sizedBox16H,
                     Center(
                       child: ImageAssets(
-                        image: AssetsPath.avtar,
+                        image: AssetsPath.mobileTwo,
                         height: 240,
                         width: 240,
                       ),
@@ -75,14 +83,15 @@ class OtpVerificationScreen extends StatelessWidget {
                     ),
                     Dimentions.sizedBox8H,
                     Text(
-                      AppStrings.otpSent,
+                      '${AppStrings.otpSent}$phoneNumber.',
                       style: TextStyles().textStylesMontserrat(
                         fontSize: 12,
                       ),
                     ),
                     Dimentions.sizedBox24H,
                     CustomCodeField(
-                      controller: otpVerificationCubit.otpVerificationController,
+                      controller:
+                          otpVerificationCubit.otpVerificationController,
                       validator: (String? value) {
                         return Utils().requiredValidator(value ?? '');
                       },
@@ -98,41 +107,32 @@ class OtpVerificationScreen extends StatelessWidget {
                           );
                         }
                       },
-                      isLoading: state is OtpVerificationLoadingState ? true : false,
+                      isLoading:
+                          state is OtpVerificationLoadingState ? true : false,
                     ),
                     Dimentions.sizedBox16H,
-                    RichText(
-                      text: TextSpan(
-                        text: '',
+                    if (!showResendOtp)
+                      Text(
+                        "$timerValue ${AppStrings.seconds}",
                         style: TextStyles().textStylesMontserrat(
                           fontSize: 16,
-                          color: AppColors.black,
+                          color: AppColors.primaryBlue,
                         ),
-                        children: [
-                          TextSpan(
-                            text: AppStrings.resendOTP,
-                            style: TextStyles().textStylesMontserrat(
-                                fontSize: 16,
-                                color: AppColors.black,
-                                decoration: TextDecoration.underline),
-                          ),
-                          TextSpan(
-                            text: ' 30 ',
-                            style: TextStyles().textStylesMontserrat(
-                              fontSize: 16,
-                              color: AppColors.primaryBlue,
-                            ),
-                          ),
-                          TextSpan(
-                            text: AppStrings.seconds,
-                            style: TextStyles().textStylesMontserrat(
-                              fontSize: 16,
-                              color: AppColors.primaryBlue,
-                            ),
-                          ),
-                        ],
                       ),
-                    ),
+                    if (showResendOtp)
+                      GestureDetector(
+                        onTap: () {
+                          otpVerificationCubit.resendOtp(phoneNumber);
+                        },
+                        child: Text(
+                          AppStrings.resendOTP,
+                          style: TextStyles().textStylesMontserrat(
+                            fontSize: 16,
+                            color: AppColors.primaryBlue,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               );

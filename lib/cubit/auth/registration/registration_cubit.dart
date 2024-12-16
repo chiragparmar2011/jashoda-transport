@@ -28,14 +28,13 @@ class RegistrationCubit extends Cubit<RegistrationState> {
     try {
       emit(RegisterLoadingState());
       Map<String, String> requestData = {
-        'name': email,
+        'name': name,
         'email': email,
         'companyName': companyName,
         'industryType': industryType,
-        'phoneNumber':prefs.getString('phoneNumber').toString()
+        'phoneNumber': prefs.getString('phoneNumber').toString()
       };
       UserModel? data = await authRepositoryImpl.register(requestData);
-      print("id register==>${data?.sId}");
       prefs.setString(key: "id", value: data?.sId ?? '');
       prefs.setUser(data);
       emit(RegisterSuccessState(data));

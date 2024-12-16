@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jashoda_transport/core/helper/shared_preference.dart';
 import 'package:jashoda_transport/core/routes/app_routes.dart';
 import 'package:jashoda_transport/core/utils/app_assets.dart';
 import 'package:jashoda_transport/core/utils/app_colors.dart';
@@ -15,7 +17,6 @@ import 'package:jashoda_transport/cubit/bottomnav/bottom_nav_cubit.dart';
 import 'package:jashoda_transport/cubit/dashboard/home/home_cubit.dart';
 import 'package:jashoda_transport/data/model/truck/truck_detail_model.dart';
 import 'package:jashoda_transport/getit_injector.dart';
-import 'package:jashoda_transport/ui/dashboard/dashboard_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -26,66 +27,89 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final HomeCubit homeCubit = injector<HomeCubit>();
+  String id = '';
+  String userName = '';
+  final _prefs = injector.get<SharedPreferenceHelper>();
 
   @override
   void initState() {
-    homeCubit.fetchRecentCalculation('6744b9f4a07f02312a804606');
+    id = _prefs.getString('id');
+    userName = _prefs.getUser()?.name ?? '';
+    homeCubit.fetchRecentCalculation(id);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-        child: BlocConsumer<HomeCubit, HomeState>(
-          bloc: homeCubit,
-          listener: (context, state) {
-            if (state is TruckDetailLoadingState) {
-              const CommonProgressIndicator(
-                color: AppColors.primaryBlue,
-              );
-            }
-            if (state is TruckDetailErrorState) {
-              Utils.errorMessage(context, state.error);
-            }
-          },
-          builder: (context, state) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Dimentions.sizedBox24H,
-                Text(
-                  "${AppStrings.welcome} User!",
-                  style: TextStyles().textStylesNunito(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                Text(
-                  AppStrings.homeHeader,
-                  style: TextStyles().textStylesMontserrat(
-                    fontSize: 14,
-                  ),
-                ),
-                const Divider(
-                  color: AppColors.greyWhite,
-                  thickness: 1,
-                ),
-                Dimentions.sizedBox16H,
-                state is TruckDetailLoadingState
-                    ? const Center(
-                        child: CommonProgressIndicator(
-                          color: AppColors.primaryBlue,
-                        ),
-                      )
-                    : Expanded(
-                        child: (homeCubit.truckDetailList ?? []).isEmpty ? _buildWithOutDetail() : _buildWithDetail(),
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        SystemNavigator.pop();
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.white,
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+          child: BlocConsumer<HomeCubit, HomeState>(
+            bloc: homeCubit,
+            listener: (context, state) {
+              if (state is TruckDetailLoadingState) {
+                const CommonProgressIndicator(
+                  color: AppColors.primaryBlue,
+                );
+              }
+            },
+            builder: (context, state) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Dimentions.sizedBox24H,
+                  RichText(
+                    text: TextSpan(
+                      text: AppStrings.welcome,
+                      style: TextStyles().textStylesNunito(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.black,
                       ),
-              ],
-            );
-          },
+                      children: [
+                        TextSpan(
+                          text: userName,
+                          style: TextStyles().textStylesNunito(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.primaryBlue,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Text(
+                    AppStrings.homeHeader,
+                    style: TextStyles().textStylesMontserrat(
+                      fontSize: 14,
+                    ),
+                  ),
+                  const Divider(
+                    color: AppColors.greyWhite,
+                    thickness: 1,
+                  ),
+                  Dimentions.sizedBox16H,
+                  state is TruckDetailLoadingState
+                      ? const Center(
+                          child: CommonProgressIndicator(
+                            color: AppColors.primaryBlue,
+                          ),
+                        )
+                      : Expanded(
+                          child: (homeCubit.truckDetailList ?? []).isEmpty
+                              ? _buildWithOutDetail()
+                              : _buildWithDetail(),
+                        ),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );
@@ -158,7 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Row(
                   children: [
                     ImageAssets(
-                      image: AssetsPath.shipping,
+                      image: AssetsPath.deliveryTruckIcon,
                       height: 48,
                       width: 48,
                     ),

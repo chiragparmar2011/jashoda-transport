@@ -12,6 +12,7 @@ import 'package:jashoda_transport/core/widgets/buttons/check_button.dart';
 import 'package:jashoda_transport/core/widgets/buttons/common_button_with_icon.dart';
 import 'package:jashoda_transport/core/widgets/buttons/confirmation_button.dart';
 import 'package:jashoda_transport/core/widgets/dialog/common_progress_indicator.dart';
+import 'package:jashoda_transport/core/widgets/dialog/confirmation_dialog.dart';
 import 'package:jashoda_transport/core/widgets/image_assets.dart';
 import 'package:jashoda_transport/core/widgets/textformfield/dimension_from_field.dart';
 import 'package:jashoda_transport/cubit/dashboard/calculation/calculation_cubit.dart';
@@ -25,191 +26,165 @@ class CreateNewCalculationScreen extends StatefulWidget {
   const CreateNewCalculationScreen({super.key});
 
   @override
-  State<CreateNewCalculationScreen> createState() => _CreateNewCalculationScreenState();
+  State<CreateNewCalculationScreen> createState() =>
+      _CreateNewCalculationScreenState();
 }
 
-class _CreateNewCalculationScreenState extends State<CreateNewCalculationScreen> {
+class _CreateNewCalculationScreenState
+    extends State<CreateNewCalculationScreen> {
   final CalculationCubit calculationCubit = injector<CalculationCubit>();
 
   final _prefs = injector.get<SharedPreferenceHelper>();
-  String? id;
+  String? id = '';
 
   @override
   void initState() {
-    setState(() {
-      id = _prefs.getString("id");
-    });
+    id = _prefs.getString('id');
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    print("Id is==>${id}");
-
     return Scaffold(
-        backgroundColor: AppColors.white,
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-          child: BlocConsumer<CalculationCubit, CalculationState>(
-            bloc: calculationCubit,
-            listener: (context, state) {
-              if (state is SubmitBoxLoadedState) {
-                Utils.successMessage(context, "Box Added");
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => VehicleLoadedScreen(
-                      createLoadModel: state.createLoadModel,
-                    ),
+      backgroundColor: AppColors.white,
+      body: _buildBody(),
+    );
+  }
+
+  Widget _buildBody() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+      child: BlocConsumer<CalculationCubit, CalculationState>(
+        bloc: calculationCubit,
+        listener: (context, state) {
+          if (state is SubmitBoxLoadedState) {
+            final createLoadModel = state.createLoadModel;
+
+            if (createLoadModel?.date == null ||
+                (createLoadModel?.date ?? '').isEmpty) {
+              Utils.errorMessage(context, "Invalid date received from server.");
+              return;
+            }
+            Utils.successMessage(context, "Box Added");
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => VehicleLoadedScreen(
+                  createLoadModel: state.createLoadModel,
+                ),
+              ),
+            );
+          }
+
+          if (state is SaveBoxErrorState) {
+            Utils.errorMessage(context, state.error);
+          }
+
+          if (state is SubmitBoxErrorState) {
+            Utils.errorMessage(
+              context,
+              'No suitable truck can accommodate your boxes based on the given details.',
+            );
+          }
+        },
+        builder: (context, state) {
+          if (state is SubmitBoxLoadingState) {
+            return const Center(
+              child: CommonProgressIndicator(
+                color: AppColors.primaryBlue,
+              ),
+            );
+          }
+          return _buildMain();
+        },
+      ),
+    );
+  }
+
+  Widget _buildMain() {
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Dimentions.sizedBox16H,
+                Text(
+                  AppStrings.calculateYourLoad,
+                  style: TextStyles().textStylesNunito(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
                   ),
-                );
-              }
-            },
-            builder: (context, state) {
-              if (state is SubmitBoxLoadingState) {
-                return const Center(
-                  child: CommonProgressIndicator(
-                    color: Colors.blueAccent,
+                ),
+                Dimentions.sizedBox4H,
+                Text(
+                  AppStrings.calculationHeader,
+                  style: TextStyles().textStylesMontserrat(
+                    fontSize: 12,
                   ),
-                );
-              }
-              return Column(
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Dimentions.sizedBox16H,
-                          Text(
-                            AppStrings.calculateYourLoad,
-                            style: TextStyles().textStylesNunito(
-                              fontSize: 32,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Dimentions.sizedBox4H,
-                          Text(
-                            AppStrings.calculationHeader,
-                            style: TextStyles().textStylesMontserrat(
-                              fontSize: 12,
-                            ),
-                          ),
-                          Dimentions.sizedBox24H,
-                          if (calculationCubit.isAddingBox) _buildAddBoxForm(context) else _buildBoxList(context),
-                        ],
-                      ),
-                    ),
-                  ),
-                  calculationCubit.boxes.isNotEmpty ? Divider() : Container(),
-                  // Reset and Submit Buttons at the bottom
-                  if (calculationCubit.boxes.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Flexible(
-                            child: CancelButton(
-                              width: 174,
-                              height: 44,
-                              title: AppStrings.reset,
-                              onPressed: () {
-                                calculationCubit.resetBoxes();
-                              },
-                            ),
-                          ),
-                          Dimentions.sizedBox16W,
-                          Flexible(
-                            child: ConfirmationButton(
-                              width: 174,
-                              height: 44,
-                              foregroundColor: AppColors.orange,
-                              title: AppStrings.submit,
-                              onPressed: () {
-                                print('Boxes is==>${calculationCubit.boxes.first.weight}');
-                                // Navigator.push(context, MaterialPageRoute(builder: (context) => VehicleLoadedScreen(),));
-                                showDialog<bool>(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16), // Rounded corners for the dialog
-                                    ),
-                                    backgroundColor: Colors.white, // Set dialog background color to white
-                                    title: const Text(
-                                      'Are you sure you want to submit?',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 14,
-                                        overflow: TextOverflow.ellipsis, // Prevent wrapping if text is long
-                                      ),
-                                    ),
-                                    actions: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Expanded(
-                                            child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                foregroundColor: Colors.black, // Text color
-                                                backgroundColor: Colors.white, // Button background color
-                                                padding: const EdgeInsets.symmetric(
-                                                  horizontal: 20,
-                                                  vertical: 12,
-                                                ),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(12), // Button corners
-                                                  side: const BorderSide(
-                                                    color: Colors.black, // Border color
-                                                  ),
-                                                ),
-                                              ),
-                                              onPressed: () {
-                                                Navigator.of(context).pop(); // Close dialog
-                                              },
-                                              child: const Text('Cancel'),
-                                            ),
-                                          ),
-                                          const SizedBox(width: 15),
-                                          Expanded(
-                                            child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                foregroundColor: Colors.white, // Text color
-                                                backgroundColor: Color(0xff1DA116), // Button color
-                                                padding: const EdgeInsets.symmetric(
-                                                  horizontal: 20,
-                                                  vertical: 12,
-                                                ),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(12), // Button corners
-                                                ),
-                                              ),
-                                              onPressed: () async {
-                                                calculationCubit.submitBox(
-                                                  userId: "6744b9f4a07f02312a804606",
-                                                );
-                                                Navigator.pop(context);
-                                              },
-                                              child: const Text('Submit'),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                ],
-              );
-            },
+                ),
+                Dimentions.sizedBox24H,
+                if (calculationCubit.isAddingBox)
+                  _buildAddBoxForm(context)
+                else
+                  _buildBoxList(context),
+              ],
+            ),
           ),
-        ));
+        ),
+        calculationCubit.boxes.isNotEmpty ? const Divider() : Container(),
+        if (calculationCubit.boxes.isNotEmpty && !calculationCubit.isAddingBox)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                  child: CancelButton(
+                    width: 174,
+                    height: 44,
+                    title: AppStrings.reset,
+                    onPressed: () {
+                      calculationCubit.resetBoxes();
+                    },
+                  ),
+                ),
+                Dimentions.sizedBox16W,
+                Flexible(
+                  child: ConfirmationButton(
+                    width: 174,
+                    height: 44,
+                    foregroundColor: AppColors.orange,
+                    title: AppStrings.submit,
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => ConfirmationDialog(
+                          confirmationTitle: AppStrings.youWantToSubmit,
+                          confirmText: AppStrings.submit,
+                          cancelText: AppStrings.cancel,
+                          confirmOnPressed: () {
+                            calculationCubit.submitBox(
+                              userId: id,
+                            );
+                            Navigator.pop(context);
+                          },
+                          cancelOnPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          bgColor: AppColors.green,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ],
+    );
   }
 
   Widget _buildAddBoxForm(BuildContext context) {
@@ -231,13 +206,19 @@ class _CreateNewCalculationScreenState extends State<CreateNewCalculationScreen>
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
             itemBuilder: (context, index) {
-              DimensionModel dimensionData = calculationCubit.unitDimensionList[index];
+              DimensionModel dimensionData =
+                  calculationCubit.unitDimensionList[index];
               return DimensionWidget(
                 unitName: dimensionData.name,
-                selectedTextColor: dimensionData.isSelected ? AppColors.white : AppColors.black,
-                selectBgColor: dimensionData.isSelected ? AppColors.primaryBlue : AppColors.white,
+                selectedTextColor: dimensionData.isSelected
+                    ? AppColors.white
+                    : AppColors.black,
+                selectBgColor: dimensionData.isSelected
+                    ? AppColors.primaryBlue
+                    : AppColors.white,
                 onTap: () {
-                  calculationCubit.updateDimensions(dimensionData.isSelected, index);
+                  calculationCubit.updateDimensions(
+                      dimensionData.isSelected, index);
                 },
               );
             },
@@ -257,7 +238,7 @@ class _CreateNewCalculationScreenState extends State<CreateNewCalculationScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Box No. 1',
+                'Box',
                 style: TextStyles().textStylesNunito(
                   fontSize: 24,
                   fontWeight: FontWeight.w500,
@@ -330,10 +311,18 @@ class _CreateNewCalculationScreenState extends State<CreateNewCalculationScreen>
                       onChanged: () {
                         calculationCubit.updateStackable(true);
                       },
-                      backGroundColor: calculationCubit.isStackable ? AppColors.primaryBlue : AppColors.white,
-                      borderColor: calculationCubit.isStackable ? AppColors.primaryBlue : AppColors.black,
-                      textColor: calculationCubit.isStackable ? AppColors.white : AppColors.black,
-                      iconWidget: calculationCubit.isStackable ? ImageAssets(image: AssetsPath.checkIcon) : null,
+                      backGroundColor: calculationCubit.isStackable
+                          ? AppColors.primaryBlue
+                          : AppColors.white,
+                      borderColor: calculationCubit.isStackable
+                          ? AppColors.primaryBlue
+                          : AppColors.black,
+                      textColor: calculationCubit.isStackable
+                          ? AppColors.white
+                          : AppColors.black,
+                      iconWidget: calculationCubit.isStackable
+                          ? ImageAssets(image: AssetsPath.checkIcon)
+                          : null,
                     ),
                   ),
                   Dimentions.sizedBox16W,
@@ -344,10 +333,18 @@ class _CreateNewCalculationScreenState extends State<CreateNewCalculationScreen>
                       onChanged: () {
                         calculationCubit.updateStackable(false);
                       },
-                      backGroundColor: !calculationCubit.isStackable ? AppColors.primaryBlue : AppColors.white,
-                      borderColor: !calculationCubit.isStackable ? AppColors.white : AppColors.black,
-                      textColor: !calculationCubit.isStackable ? AppColors.white : AppColors.black,
-                      iconWidget: !calculationCubit.isStackable ? ImageAssets(image: AssetsPath.checkIcon) : null,
+                      backGroundColor: !calculationCubit.isStackable
+                          ? AppColors.primaryBlue
+                          : AppColors.white,
+                      borderColor: !calculationCubit.isStackable
+                          ? AppColors.white
+                          : AppColors.black,
+                      textColor: !calculationCubit.isStackable
+                          ? AppColors.white
+                          : AppColors.black,
+                      iconWidget: !calculationCubit.isStackable
+                          ? ImageAssets(image: AssetsPath.checkIcon)
+                          : null,
                     ),
                   ),
                 ],
@@ -355,7 +352,6 @@ class _CreateNewCalculationScreenState extends State<CreateNewCalculationScreen>
               Dimentions.sizedBox32H,
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                mainAxisSize: MainAxisSize.min,
                 children: [
                   Flexible(
                     child: CancelButton(
@@ -363,7 +359,7 @@ class _CreateNewCalculationScreenState extends State<CreateNewCalculationScreen>
                       height: 44,
                       title: AppStrings.cancel,
                       onPressed: () {
-                        calculationCubit.isAddingBox = false;
+                        calculationCubit.toggleAddBox(false);
                         calculationCubit.clearForm();
                       },
                     ),
@@ -377,6 +373,7 @@ class _CreateNewCalculationScreenState extends State<CreateNewCalculationScreen>
                       onPressed: () {
                         calculationCubit.saveBox();
                       },
+                      isConfirm: true,
                     ),
                   ),
                 ],
@@ -384,116 +381,125 @@ class _CreateNewCalculationScreenState extends State<CreateNewCalculationScreen>
             ],
           ),
         ),
-        Dimentions.sizedBox24H,
-        CustomButtonWithIconWidget(
-          height: 48,
-          title: AppStrings.addBox,
-          onPressed: () {
-            calculationCubit.toggleAddBox(true);
-          },
-          iconWidget: ImageAssets(image: AssetsPath.addWhiteIcon),
-        ),
       ],
     );
   }
 
   Widget _buildBoxList(BuildContext context) {
-    return Column(
-      children: [
-        ListView.builder(
-          itemCount: calculationCubit.boxes.length,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(), // Prevent scrolling within ListView
-          itemBuilder: (context, index) {
-            final box = calculationCubit.boxes[index];
-            return Card(
-              color: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0),
-              ),
-              elevation: 2.0,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Left section: Box details
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Box No. ${index + 1}",
-                            style: const TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 8.0),
-                          Wrap(
-                            spacing: 16.0, // Spacing between items
-                            runSpacing: 8.0, // Spacing between rows
-                            children: [
-                              Text(
-                                "Length: ${box.length}",
-                                style: const TextStyle(fontSize: 14.0),
-                              ),
-                              Text(
-                                "Width: ${box.width}",
-                                style: const TextStyle(fontSize: 14.0),
-                              ),
-                              Text(
-                                "Height: ${box.height}",
-                                style: const TextStyle(fontSize: 14.0),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8.0),
-                          Wrap(
-                            spacing: 16.0,
-                            runSpacing: 8.0,
-                            children: [
-                              Text(
-                                "No. of Items: ${box.quantity}",
-                                style: const TextStyle(fontSize: 14.0),
-                              ),
-                              Text(
-                                "Items: ${box.isStackable ? 'Stackable' : 'Not Stackable'}",
-                                style: const TextStyle(fontSize: 14.0),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    // Right section: Delete icon
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
-                      child: InkWell(
-                        child: ImageAssets(
-                          image: AssetsPath.deleteIcon,
-                        ),
-                        onTap: () {
-                          calculationCubit.removeBox(index);
-                        },
-                      ),
-                    ),
-                  ],
+    if (calculationCubit.isAddingBox) {
+      return Container();
+    } else {
+      return Column(
+        children: [
+          ListView.builder(
+            itemCount: calculationCubit.boxes.length,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              final box = calculationCubit.boxes[index];
+              return Card(
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
                 ),
-              ),
-            );
-          },
-        ),
-        Dimentions.sizedBox24H,
-        CustomButtonWithIconWidget(
-          height: 48,
-          title: AppStrings.addBox,
-          onPressed: () {
-            calculationCubit.toggleAddBox(true);
-          },
-          iconWidget: ImageAssets(image: AssetsPath.addWhiteIcon),
-        ),
-      ],
-    );
+                elevation: 2.0,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Left section: Box details
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Box No. ${index + 1}",
+                              style: const TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 8.0),
+                            Wrap(
+                              spacing: 16.0,
+                              runSpacing: 8.0,
+                              children: [
+                                Text(
+                                  "Length: ${box.length}",
+                                  style: const TextStyle(fontSize: 14.0),
+                                ),
+                                Text(
+                                  "Width: ${box.width}",
+                                  style: const TextStyle(fontSize: 14.0),
+                                ),
+                                Text(
+                                  "Height: ${box.height}",
+                                  style: const TextStyle(fontSize: 14.0),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8.0),
+                            Wrap(
+                              spacing: 16.0,
+                              runSpacing: 8.0,
+                              children: [
+                                Text(
+                                  "No. of Items: ${box.quantity}",
+                                  style: const TextStyle(fontSize: 14.0),
+                                ),
+                                Text(
+                                  "Items: ${box.isStackable ? 'Stackable' : 'Not Stackable'}",
+                                  style: const TextStyle(fontSize: 14.0),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
+                        child: InkWell(
+                          child: ImageAssets(
+                            image: AssetsPath.deleteIcon,
+                          ),
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => ConfirmationDialog(
+                                confirmationTitle: AppStrings.youWantToDelete,
+                                confirmText: AppStrings.delete,
+                                cancelText: AppStrings.cancel,
+                                confirmOnPressed: () {
+                                  calculationCubit.removeBox(index);
+                                  Navigator.of(context).pop();
+                                },
+                                cancelOnPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                bgColor: AppColors.red,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+          Dimentions.sizedBox24H,
+          CustomButtonWithIconWidget(
+            height: 48,
+            title: AppStrings.addBox,
+            onPressed: () {
+              calculationCubit.toggleAddBox(true);
+            },
+            iconWidget: ImageAssets(image: AssetsPath.addWhiteIcon),
+          ),
+        ],
+      );
+    }
   }
 }

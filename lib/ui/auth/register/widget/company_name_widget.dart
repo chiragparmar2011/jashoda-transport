@@ -27,7 +27,7 @@ class CompanyNameWidget extends StatelessWidget {
         Dimentions.sizedBox4H,
         CommonTextField(
           controller: controller,
-          hintText: 'eg. Jashoda Transport',
+          hintText: AppStrings.enterCompanyName,
           prefixIconButton: ImageAssets(image: AssetsPath.companyIcon),
           validator: (value) {
             return Utils().requiredValidator(value ?? '');

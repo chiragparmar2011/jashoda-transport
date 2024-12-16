@@ -18,3 +18,17 @@ final class EditProfileErrorState extends EditProfileState {
 
   EditProfileErrorState(this.error);
 }
+
+final class FetchUserDetailLoadingState extends EditProfileState {}
+
+final class FetchUserDetailSuccessState extends EditProfileState {
+  final UserModel? userModel;
+
+  FetchUserDetailSuccessState(this.userModel);
+}
+
+final class FetchUserDetailErrorState extends EditProfileState {
+  final String error;
+
+  FetchUserDetailErrorState(this.error);
+}

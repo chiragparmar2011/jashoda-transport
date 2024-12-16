@@ -25,15 +25,19 @@ class AppStrings {
   static const String termsNCondition = 'Terms and conditions.';
   static const String enterOTP = 'Enter OTP';
   static const String verifyOTP = 'Verify OTP';
-  static const String otpSent = 'OTP has been sent to +91 9876543210.';
+  static const String otpSent = 'OTP has been sent to +91 ';
   static const String resendOTP = 'Resend OTP?';
   static const String seconds = 'seconds';
   static const String registerYourSelf = 'Register Yourself!';
   static const String registerContent = 'Enter your details to register and find\n your best vehicle!';
   static const String fullName = 'Full Name';
+  static const String enterFullName = 'Enter full name';
   static const String emailAddress = 'Email Address';
+  static const String enterEmailAddress = 'Enter email address';
   static const String companyName = 'Company Name';
+  static const String enterCompanyName = 'Enter company name';
   static const String industryType = 'Industry type';
+  static const String enterIndustryType = 'Enter industry name';
   static const String industry = 'Industry';
   static const String registerNow = 'Register Now';
   static const String countryCode = '91';
@@ -45,11 +49,11 @@ class AppStrings {
   static const String profile = 'Profile';
 
   /// Home
-  static const String welcome = 'Welcome';
+  static const String welcome = 'Welcome ';
   static const String homeHeader = 'Ready to calculate and save your next load?';
   static const String homeInitialText = 'Lets start searching the perfect cargo\nvehicle. Type your dimensions now & get\nyour cargo load!';
   static const String startNewCalculation = 'Start New Calculation';
-  static const String hey = 'Hey,';
+  static const String hey = 'Hey, ';
   static const String recentCalculation  = 'Recent Calculations';
 
   /// Calculation

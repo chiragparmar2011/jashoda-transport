@@ -11,7 +11,15 @@ class CreateLoadModel extends ResponseDataObjectSerialization<CreateLoadModel> {
     truckDetails = json['truckDetails'] != null
         ? TruckDetails.fromJson(json['truckDetails'])
         : null;
-    date = json['date'];
+    try {
+      if (json['date'] != null && json['date'].isNotEmpty) {
+        date = DateTime.parse(json['date']).toIso8601String();
+      } else {
+        date = null;
+      }
+    } catch (e) {
+      date = null;
+    }
     boxDetails = json['boxDetails'] != null
         ? BoxDetails.fromJson(json['boxDetails'])
         : null;
@@ -23,7 +31,9 @@ class CreateLoadModel extends ResponseDataObjectSerialization<CreateLoadModel> {
     if (truckDetails != null) {
       data['truckDetails'] = truckDetails!.toJson();
     }
-    data['date'] = date;
+    if (date != null) {
+      data['date'] = date;
+    }
     if (boxDetails != null) {
       data['boxDetails'] = boxDetails!.toJson();
     }

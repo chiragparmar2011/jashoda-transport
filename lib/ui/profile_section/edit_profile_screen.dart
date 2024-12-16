@@ -9,6 +9,7 @@ import 'package:jashoda_transport/core/utils/app_strings.dart';
 import 'package:jashoda_transport/core/utils/dimentions.dart';
 import 'package:jashoda_transport/core/utils/text_styles.dart';
 import 'package:jashoda_transport/core/utils/utils.dart';
+import 'package:jashoda_transport/core/widgets/buttons/back_arrow.dart';
 import 'package:jashoda_transport/core/widgets/buttons/cancle_button.dart';
 import 'package:jashoda_transport/core/widgets/buttons/confirmation_button.dart';
 import 'package:jashoda_transport/core/widgets/image_assets.dart';
@@ -32,7 +33,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   void initState() {
-    editProfileCubit.userModel = _prefs.getUser();
+    editProfileCubit.id = _prefs.getString('id');
+    _initializeUserDetails();
+    super.initState();
+  }
+
+  Future<void> _initializeUserDetails() async {
+    await editProfileCubit.fetchUserDetail(userId: editProfileCubit.id);
     editProfileCubit.fullNameController.text =
         editProfileCubit.userModel?.name ?? '';
     editProfileCubit.emailAddController.text =
@@ -41,7 +48,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         editProfileCubit.userModel?.companyName ?? '';
     editProfileCubit.industryTypeController.text =
         editProfileCubit.userModel?.industryType ?? '';
-    super.initState();
   }
 
   @override
@@ -68,6 +74,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Dimentions.sizedBox24H,
+                    BackArrowWidget(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    Dimentions.sizedBox16H,
                     Text(
                       AppStrings.yourProfile,
                       style: TextStyles().textStylesNunito(
@@ -84,7 +96,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         child: editProfileCubit.profilePicture.isNotEmpty
                             ? CircleAvatar(
                                 backgroundImage: MemoryImage(
-                                  base64Decode(editProfileCubit.profilePicture.split(',')[1]),
+                                  base64Decode(editProfileCubit.profilePicture
+                                      .split(',')[1]),
                                 ),
                                 radius: 84,
                               )
@@ -130,25 +143,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             width: 174,
                             title: AppStrings.save,
                             onPressed: () {
-                              if (editProfileCubit.formKey.currentState!
-                                  .validate()) {
+                              if (editProfileCubit.formKey.currentState!.validate()) {
                                 editProfileCubit.updateUser(
-                                  userId: '674ca909018fb99fe8eda14e',
-                                  name:
-                                      editProfileCubit.fullNameController.text,
-                                  companyName: editProfileCubit
-                                      .companyNameController.text,
-                                  industryType: editProfileCubit
-                                      .industryTypeController.text,
-                                  profilePicture: editProfileCubit
-                                          .profilePicture.isNotEmpty
+                                  userId: editProfileCubit.id,
+                                  name: editProfileCubit.fullNameController.text,
+                                  companyName: editProfileCubit.companyNameController.text,
+                                  industryType: editProfileCubit.industryTypeController.text,
+                                  profilePicture: editProfileCubit.profilePicture.isNotEmpty
                                       ? editProfileCubit.profilePicture
                                       : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wQAAwEB/atfz7AAAAAASUVORK5CYII=',
                                 );
                               }
                             },
-                            isLoading:
-                                state is EditProfileLoadingState ? true : false,
+                            isLoading: state is EditProfileLoadingState ? true : false,
                           ),
                         ),
                       ],

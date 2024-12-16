@@ -55,8 +55,13 @@ class Utils {
   }
 
   String formattedDate(String date) {
-    DateTime dateTime = DateTime.parse(date);
-    String formattedDate = DateFormat('dd/MM/yyyy').format(dateTime);
-    return formattedDate;
+    try {
+      DateTime dateTime = DateTime.parse(date);
+      return DateFormat('dd/MM/yyyy').format(dateTime);
+    } catch (e) {
+      debugPrint('Invalid date format: $date');
+      return 'Invalid Date';
+    }
   }
+
 }

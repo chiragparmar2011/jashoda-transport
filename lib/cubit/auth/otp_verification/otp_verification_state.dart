@@ -19,3 +19,13 @@ final class OtpVerificationErrorState extends OtpVerificationState {
 
   OtpVerificationErrorState(this.error);
 }
+
+final class ResendOtpLoadingState extends OtpVerificationState {}
+
+class OtpVerificationTimerState extends OtpVerificationState {
+  final int remainingTime;
+  final bool canResendOtp;
+
+  OtpVerificationTimerState(this.remainingTime, this.canResendOtp);
+}
+
