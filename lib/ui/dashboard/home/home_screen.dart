@@ -179,78 +179,83 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: AppColors.greyLightWhite),
                 ),
-                child: Row(
-                  children: [
-                    ImageAssets(
-                      image: AssetsPath.deliveryTruckIcon,
-                      height: 48,
-                      width: 48,
-                    ),
-                    Dimentions.sizedBox22W,
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            AppStrings.vehicleName,
-                            style: TextStyles().textStylesMontserrat(
-                              fontSize: 10,
-                              color: AppColors.darkGrey,
+                child: InkWell(
+                  onTap: () {
+                    print("data is===>${homeCubit.truckDetailList?[index]}");
+                  },
+                  child: Row(
+                    children: [
+                      ImageAssets(
+                        image: AssetsPath.deliveryTruckIcon,
+                        height: 48,
+                        width: 48,
+                      ),
+                      Dimentions.sizedBox22W,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              AppStrings.vehicleName,
+                              style: TextStyles().textStylesMontserrat(
+                                fontSize: 10,
+                                color: AppColors.darkGrey,
+                              ),
                             ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Flexible(
-                                child: Text(
-                                  data?.truckDetails?.name ?? '',
-                                  style: TextStyles().textStylesMontserrat(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    data?.truckDetails?.name ?? '',
+                                    style: TextStyles().textStylesMontserrat(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  overflow: TextOverflow.ellipsis,
                                 ),
-                              ),
-                              Text(
-                                Utils().formattedDate('${data?.createdAt}' ?? ''),
-                                style: TextStyles().textStylesMontserrat(
-                                  fontSize: 12,
-                                  color: AppColors.darkBlackGrey,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                AppStrings.dimentions,
-                                style: TextStyles().textStylesMontserrat(
-                                  fontSize: 12,
-                                  color: AppColors.darkGrey,
-                                ),
-                              ),
-                              Flexible(
-                                child: Text(
-                                  ' ${data?.truckDetails?.dimensions?.l ?? ''}'
-                                  ' ${'x'} '
-                                  '${data?.truckDetails?.dimensions?.w ?? ''}'
-                                  ' ${'x'} '
-                                  '${data?.truckDetails?.dimensions?.h ?? ''}'
-                                  ' ${'x'} '
-                                  '${/*data.dimensionType*/ 'in foot'}',
+                                Text(
+                                  Utils().formattedDate('${data?.createdAt}' ?? ''),
                                   style: TextStyles().textStylesMontserrat(
                                     fontSize: 12,
                                     color: AppColors.darkBlackGrey,
                                   ),
-                                  overflow: TextOverflow.ellipsis,
                                 ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    )
-                  ],
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  AppStrings.dimentions,
+                                  style: TextStyles().textStylesMontserrat(
+                                    fontSize: 12,
+                                    color: AppColors.darkGrey,
+                                  ),
+                                ),
+                                Flexible(
+                                  child: Text(
+                                    ' ${data?.truckDetails?.dimensions?.l ?? ''}'
+                                    ' ${'x'} '
+                                    '${data?.truckDetails?.dimensions?.w ?? ''}'
+                                    ' ${'x'} '
+                                    '${data?.truckDetails?.dimensions?.h ?? ''}'
+                                    ' ${'x'} '
+                                    '${/*data.dimensionType*/ 'in foot'}',
+                                    style: TextStyles().textStylesMontserrat(
+                                      fontSize: 12,
+                                      color: AppColors.darkBlackGrey,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               );
             },

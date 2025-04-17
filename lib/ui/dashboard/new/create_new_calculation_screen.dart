@@ -228,6 +228,8 @@ class _CreateNewCalculationScreenState
           ),
         ),
         Dimentions.sizedBox24H,
+        calculationCubit.boxes.isNotEmpty?
+        Container(child: Text(calculationCubit.boxes.length.toString()),):Container(),
         Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
@@ -253,6 +255,7 @@ class _CreateNewCalculationScreenState
                     child: DimensionFromField(
                       controller: calculationCubit.lengthController,
                       hintText: AppStrings.enterLength,
+                      label:"Enter Length" ,
                     ),
                   ),
                   Dimentions.sizedBox16W,
@@ -260,6 +263,8 @@ class _CreateNewCalculationScreenState
                     child: DimensionFromField(
                       controller: calculationCubit.widthController,
                       hintText: AppStrings.enterWidth,
+                      label:"Enter Width" ,
+
                     ),
                   ),
                 ],
@@ -273,6 +278,8 @@ class _CreateNewCalculationScreenState
                     child: DimensionFromField(
                       controller: calculationCubit.heightController,
                       hintText: AppStrings.enterHeight,
+                      label:"Enter Height" ,
+
                     ),
                   ),
                   Dimentions.sizedBox16W,
@@ -280,6 +287,8 @@ class _CreateNewCalculationScreenState
                     child: DimensionFromField(
                       controller: calculationCubit.quantityController,
                       hintText: AppStrings.noOfQuantity,
+                      label:"No. of quantity" ,
+
                     ),
                   ),
                 ],
@@ -293,6 +302,8 @@ class _CreateNewCalculationScreenState
                     child: DimensionFromField(
                       controller: calculationCubit.weightController,
                       hintText: AppStrings.enterWeight,
+                      label:"Enter Weight" ,
+
                     ),
                   ),
                   Dimentions.sizedBox16W,

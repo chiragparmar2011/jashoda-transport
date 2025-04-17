@@ -11,6 +11,7 @@ import 'package:jashoda_transport/core/utils/text_styles.dart';
 import 'package:jashoda_transport/cubit/bottomnav/bottom_nav_cubit.dart';
 import 'package:jashoda_transport/getit_injector.dart';
 import 'package:jashoda_transport/ui/dashboard/profile/widget/profile_section_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -102,8 +103,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ProfileSectionWidget(
                 avtarImage: AssetsPath.logOutIcon,
                 title: AppStrings.logout,
-                onTap: () {
-                  context.read<BottomNavCubit>().updateNavItem(BottomNavItem.home);
+                onTap: () async {
+                  await prefs.clear();
+                  // context.read<BottomNavCubit>().updateNavItem(BottomNavItem.home);
                   Navigator.of(context, rootNavigator: true)
                       .pushNamedAndRemoveUntil(
                     MyRoutes.inputMoNumberScreen,

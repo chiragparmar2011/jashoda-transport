@@ -59,4 +59,6 @@ class SharedPreferenceHelper {
   }
 
   Future remove(String key) async => await preferences.remove(key);
+
+  Future<void> clear() async => await preferences.clear();
 }

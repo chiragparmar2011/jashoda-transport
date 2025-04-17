@@ -6,47 +6,63 @@ class DimensionFromField extends StatelessWidget {
   DimensionFromField({
     required this.controller,
     required this.hintText,
+    required this.label,
     super.key,
   });
 
-  TextEditingController controller = TextEditingController();
+  final TextEditingController controller;
   final String hintText;
+  final String label;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 40,
-      child: TextField(
-        controller: controller,
-        scrollPadding: EdgeInsets.zero,
-        keyboardType: TextInputType.number,
-        decoration: InputDecoration(
-          contentPadding: const EdgeInsets.only(left: 16,bottom: 0,right: 0,top: 0),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
-            borderSide: const BorderSide(color: AppColors.black)
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyles().textStylesMontserrat(
+            fontSize: 14,
+            color: AppColors.black,
+            fontWeight: FontWeight.w500,
           ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
-            borderSide: const BorderSide(
-              color: AppColors.black,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
-            borderSide: const BorderSide(
-              color: AppColors.black,
-            ),
-          ),
-          filled: true,
-          hintText: hintText,
-          helperStyle: TextStyles().textStylesMontserrat(
-            fontSize: 12,
-            color: AppColors.darkGrey,
-          ),
-          fillColor: AppColors.white,
         ),
-      ),
+        const SizedBox(height: 4),
+        SizedBox(
+          height: 40,
+          child: TextField(
+            controller: controller,
+            scrollPadding: EdgeInsets.zero,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.only(left: 16),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8.0),
+                borderSide: const BorderSide(color: AppColors.black),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8.0),
+                borderSide: const BorderSide(
+                  color: AppColors.black,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8.0),
+                borderSide: const BorderSide(
+                  color: AppColors.black,
+                ),
+              ),
+              filled: true,
+              hintText: hintText,
+              hintStyle: TextStyles().textStylesMontserrat(
+                fontSize: 12,
+                color: AppColors.darkGrey,
+              ),
+              fillColor: AppColors.white,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
