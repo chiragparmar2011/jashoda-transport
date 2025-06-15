@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:jashoda_transport/core/utils/app_assets.dart';
 import 'package:jashoda_transport/core/utils/app_colors.dart';
 import 'package:jashoda_transport/core/utils/app_enum.dart';
 import 'package:jashoda_transport/core/utils/app_strings.dart';
 import 'package:jashoda_transport/core/utils/dimentions.dart';
 import 'package:jashoda_transport/core/utils/text_styles.dart';
-import 'package:jashoda_transport/core/utils/utils.dart';
 import 'package:jashoda_transport/core/widgets/buttons/common_button.dart';
 import 'package:jashoda_transport/core/widgets/image_assets.dart';
+import 'package:jashoda_transport/cubit/bottomnav/bottom_nav_cubit.dart';
 import 'package:jashoda_transport/data/model/create_load_model.dart';
 import 'package:jashoda_transport/ui/dashboard/dashboard_screen.dart';
 
-import '../../cubit/bottomnav/bottom_nav_cubit.dart';
-
 class VehicleLoadedScreen extends StatefulWidget {
-  final CreateLoadModel? createLoadModel;
+  final CreateLoadModel? data;
 
-  const VehicleLoadedScreen({super.key, this.createLoadModel});
+  const VehicleLoadedScreen({super.key, this.data});
 
   @override
   State<VehicleLoadedScreen> createState() => _VehicleLoadedScreenState();
@@ -30,144 +27,135 @@ class _VehicleLoadedScreenState extends State<VehicleLoadedScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.white,
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-          child: Center(
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Dimentions.sizedBox8H,
-                Align(
-                  alignment: Alignment.topLeft,
+                Center(
                   child: Text(
-                    AppStrings.perfectVehicleForLoad,
+                    AppStrings.truckCalculation,
                     style: TextStyles().textStylesNunito(
-                      fontSize: 32,
+                      fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-                Dimentions.sizedBox24H,
-                Container(
-                  height: 180,
-                  width: 180,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(500),
-                    border: Border.all(
-                      color: AppColors.greyLightWhite,
-                    ),
-                  ),
-                  child: ImageAssets(
-                    image: AssetsPath.deliveryTruckIcon,
-                    height: 180,
-                    width: 180,
-                  ),
-                ),
-                Dimentions.sizedBox24H,
-                Text(
-                  AppStrings.vehicleName,
-                  style: TextStyles().textStylesMontserrat(
-                    fontSize: 12,
-                    color: AppColors.darkGrey,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Text(
-                  widget.createLoadModel?.truckDetails?.truckName ?? '',
-                  style: TextStyles().textStylesNunito(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Dimentions.sizedBox20H,
+                ImageAssets(
+                  image: AssetsPath.deliveryTruckIcon,
+                  height: 110,
+                  width: 110,
                 ),
                 Dimentions.sizedBox20H,
-                Text(
-                  AppStrings.dimentions,
-                  style: TextStyles().textStylesMontserrat(
-                    fontSize: 12,
-                    color: AppColors.darkGrey,
-                    fontWeight: FontWeight.w500,
-                  ),
+                _buildContentText(widget.data?.truckDetails?.truckName ?? ''),
+                _buildDividerView(),
+                _buildHeaderText(AppStrings.dimensions),
+                Dimentions.sizedBox8H,
+                _buildContentText(
+                  '${widget.data?.truckDetails?.dimensions?.l} L X '
+                  '${widget.data?.truckDetails?.dimensions?.w} W X '
+                  '${widget.data?.truckDetails?.dimensions?.h} H',
+                  fontSize: 20,
+                  alignLeft: true,
                 ),
-                Text(
-                  '${widget.createLoadModel?.truckDetails?.dimensions?.l.toString()} L X ${widget.createLoadModel?.truckDetails?.dimensions?.w.toString()} W X ${widget.createLoadModel?.truckDetails!.dimensions?.h.toString()} H (in foot)',
-                  style: TextStyles().textStylesNunito(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Dimentions.sizedBox20H,
+                Dimentions.sizedBox10H,
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      AppStrings.weightCapacity,
-                      style: TextStyles().textStylesMontserrat(
-                        fontSize: 12,
-                        color: AppColors.darkGrey,
-                        fontWeight: FontWeight.w500,
-                      ),
+                    _buildContentText(
+                      'Max Load: ${widget.data?.truckDetails?.maxLoad}',
+                      fontSize: 16,
                     ),
-                    Text(
-                      AppStrings.date,
-                      style: TextStyles().textStylesMontserrat(
-                        fontSize: 12,
-                        color: AppColors.darkGrey,
-                        fontWeight: FontWeight.w500,
-                      ),
+                    _buildContentText(
+                      'Total Weight: ${widget.data?.truckDetails?.totalWeight}',
+                      fontSize: 16,
                     ),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      'Max Load ${widget.createLoadModel?.truckDetails?.maxLoad.toString()} kgs',
-                      style: TextStyles().textStylesNunito(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      Utils().formattedDate(widget.createLoadModel?.date ?? ''),
-                      style: TextStyles().textStylesNunito(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
+                _buildDividerView(),
+                _buildHeaderText('Box Summary'),
+                Dimentions.sizedBox8H,
+                _buildContentText(
+                  'Total Boxes: ${widget.data?.boxDetails?.totalBoxes}',
+                  alignLeft: true,
                 ),
-                Dimentions.sizedBox20H,
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "No. of boxes: ${widget.createLoadModel?.boxDetails?.totalBoxes.toString()}",
-                      style: TextStyles().textStylesMontserrat(
-                        fontSize: 12,
-                        color: AppColors.darkGrey,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    ...?widget.createLoadModel?.boxDetails?.boxes?.map((box) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Box No. ${box.boxNumber}: ${box.items} items',
-                              style: TextStyles().textStylesNunito(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
+                _buildContentText(
+                  'Total Items: ${widget.data?.boxDetails?.totalItems}',
+                  alignLeft: true,
+                ),
+                const SizedBox(height: 12),
+                ...?widget.data?.boxDetails?.boxes?.map(
+                  (box) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4.0),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: _buildContentText(
+                          'Box ${box.boxNumber}: ${box.items} items',
+                          fontSize: 16,
+                          alignLeft: true,
                         ),
-                      );
-                    }),
-                  ],
+                      ),
+                    );
+                  },
                 ),
-                Dimentions.sizedBox40H,
+                _buildDividerView(),
+                _buildHeaderText('Loading Instructions'),
+                const SizedBox(height: 8),
+                ...(widget.data?.truckDetails?.loadingInstructions ?? []).map(
+                  (step) => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildContentText(
+                          'Step ${step.step}:',
+                          fontSize: 16,
+                          alignLeft: true,
+                        ),
+                        Text(
+                          step.content ?? '',
+                          style: TextStyles().textStylesNunito(fontSize: 14),
+                          textAlign: TextAlign.left,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                _buildDividerView(),
+                _buildHeaderText('Loading Zones'),
+                const SizedBox(height: 8),
+                ...(widget.data?.truckDetails?.loadingZones ?? []).map(
+                  (zone) => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildContentText(
+                          'Zone ${zone.zoneNumber} (${zone.width} x ${zone.height}):',
+                          fontSize: 16,
+                          alignLeft: true,
+                        ),
+                        _buildContentText(
+                          'Box: ${zone.boxDetails?.boxLength} x ${zone.boxDetails?.boxWidth} x ${zone.boxDetails?.boxHeight}, '
+                          'Weight: ${zone.boxDetails?.boxWeight}kg',
+                          fontSize: 16,
+                          alignLeft: true,
+                        ),
+                        _buildContentText(
+                          'Quantity: ${zone.boxDetails?.boxQuantity}, '
+                          'Stackable: ${zone.boxDetails?.isStackable ?? false ? "Yes" : "No"}',
+                          fontSize: 16,
+                          alignLeft: true,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Dimentions.sizedBox20H,
                 CustomButtonWidget(
                   title: AppStrings.save,
                   onPressed: () {
@@ -192,4 +180,41 @@ class _VehicleLoadedScreenState extends State<VehicleLoadedScreen> {
     );
   }
 
+  Widget _buildHeaderText(String text) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Text(
+        text,
+        style: TextStyles().textStylesMontserrat(
+          fontSize: 14,
+          color: AppColors.darkGrey,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContentText(String text,
+      {double fontSize = 24, bool alignLeft = false}) {
+    return Align(
+      alignment: alignLeft ? Alignment.centerLeft : Alignment.center,
+      child: Text(
+        text,
+        style: TextStyles().textStylesNunito(
+          fontSize: fontSize,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDividerView() {
+    return const Column(
+      children: [
+        Dimentions.sizedBox10H,
+        Divider(color: AppColors.greyWhite),
+        Dimentions.sizedBox10H,
+      ],
+    );
+  }
 }

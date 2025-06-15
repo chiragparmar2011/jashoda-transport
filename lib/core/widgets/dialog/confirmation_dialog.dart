@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:jashoda_transport/core/utils/app_colors.dart';
-import 'package:jashoda_transport/core/utils/dimentions.dart';
 import 'package:jashoda_transport/core/utils/text_styles.dart';
 
 class ConfirmationDialog extends StatelessWidget {
@@ -33,7 +32,10 @@ class ConfirmationDialog extends StatelessWidget {
       contentPadding: EdgeInsets.zero,
       title: Text(
         confirmationTitle,
-        style: TextStyles().textStylesMontserrat(fontSize: 16),
+        style: TextStyles().textStylesMontserrat(
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+        ),
         textAlign: TextAlign.center,
       ),
       actions: [
@@ -60,7 +62,7 @@ class ConfirmationDialog extends StatelessWidget {
                 cancelText,
                 style: TextStyles().textStylesMontserrat(
                   fontSize: 14,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),
@@ -81,7 +83,7 @@ class ConfirmationDialog extends StatelessWidget {
                 confirmText,
                 style: TextStyles().textStylesMontserrat(
                   fontSize: 14,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),

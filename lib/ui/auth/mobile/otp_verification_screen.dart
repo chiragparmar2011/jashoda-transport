@@ -18,7 +18,8 @@ class OtpVerificationScreen extends StatelessWidget {
   OtpVerificationScreen({required this.phoneNumber, super.key});
 
   final String phoneNumber;
-  final OtpVerificationCubit otpVerificationCubit = injector<OtpVerificationCubit>();
+  final OtpVerificationCubit otpVerificationCubit =
+      injector<OtpVerificationCubit>();
 
   @override
   Widget build(BuildContext context) {
@@ -31,19 +32,33 @@ class OtpVerificationScreen extends StatelessWidget {
           child: BlocConsumer<OtpVerificationCubit, OtpVerificationState>(
             bloc: otpVerificationCubit,
             listener: (context, state) {
-              if (state is OtpVerificationSuccessState) {
-                Utils.successMessage(context, state.message);
-                if (state.isRegistered) {
-                  Navigator.pushNamed(context, MyRoutes.dashboardScreen);
-                } else {
-                  Navigator.pushNamed(context, MyRoutes.registrationScreen)
-                      .then((value) {
-                    otpVerificationCubit.otpVerificationController.clear();
-                  });
-                }
-              }
-              if (state is OtpVerificationErrorState) {
-                Utils.errorMessage(context, state.error ?? '');
+              switch (state) {
+                case OtpVerificationSuccessState():
+                  Utils.successMessage(context, state.message);
+                  if (state.isRegistered) {
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      MyRoutes.dashboardScreen,
+                      (Route<dynamic> route) => false,
+                    );
+                  } else {
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      MyRoutes.registrationScreen,
+                      (Route<dynamic> route) => false,
+                    ).then((value) {
+                      otpVerificationCubit.otpVerificationController.clear();
+                    });
+                  }
+                  break;
+                case OtpVerificationErrorState():
+                  Utils.errorMessage(context, state.error ?? '');
+                  break;
+                case OtpResendSuccessState():
+                  Utils.successMessage(context, state.message ?? '');
+                  break;
+                default:
+                  break;
               }
             },
             builder: (context, state) {
@@ -100,10 +115,12 @@ class OtpVerificationScreen extends StatelessWidget {
                     CustomButtonWidget(
                       title: AppStrings.verifyOTP,
                       onPressed: () {
-                        if (otpVerificationCubit.formKey.currentState!.validate()) {
+                        if (otpVerificationCubit.formKey.currentState!
+                            .validate()) {
                           otpVerificationCubit.verifyOTP(
                             phoneNumber: phoneNumber,
-                            otp: otpVerificationCubit.otpVerificationController.text,
+                            otp: otpVerificationCubit
+                                .otpVerificationController.text,
                           );
                         }
                       },

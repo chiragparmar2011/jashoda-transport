@@ -1,7 +1,6 @@
 part of 'edit_profile_cubit.dart';
 
-@immutable
-sealed class EditProfileState {}
+abstract class EditProfileState {}
 
 final class EditProfileInitial extends EditProfileState {}
 

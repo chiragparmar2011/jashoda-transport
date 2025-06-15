@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jashoda_transport/core/helper/shared_preference.dart';
 import 'package:jashoda_transport/core/utils/app_assets.dart';
 import 'package:jashoda_transport/core/utils/app_colors.dart';
 import 'package:jashoda_transport/core/utils/app_strings.dart';
@@ -14,6 +13,7 @@ import 'package:jashoda_transport/core/widgets/buttons/cancle_button.dart';
 import 'package:jashoda_transport/core/widgets/buttons/confirmation_button.dart';
 import 'package:jashoda_transport/core/widgets/image_assets.dart';
 import 'package:jashoda_transport/cubit/dashboard/profile/editprofile/edit_profile_cubit.dart';
+import 'package:jashoda_transport/data/model/user/usermodel.dart';
 import 'package:jashoda_transport/getit_injector.dart';
 import 'package:jashoda_transport/ui/auth/register/widget/company_name_widget.dart';
 import 'package:jashoda_transport/ui/auth/register/widget/email_address_widget.dart';
@@ -21,7 +21,8 @@ import 'package:jashoda_transport/ui/auth/register/widget/full_name_widget.dart'
 import 'package:jashoda_transport/ui/auth/register/widget/industry_type_widget.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({super.key});
+  const EditProfileScreen({super.key, required this.userModel});
+  final UserModel userModel;
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -29,25 +30,18 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final EditProfileCubit editProfileCubit = injector<EditProfileCubit>();
-  final _prefs = injector.get<SharedPreferenceHelper>();
 
   @override
   void initState() {
-    editProfileCubit.id = _prefs.getString('id');
     _initializeUserDetails();
     super.initState();
   }
 
   Future<void> _initializeUserDetails() async {
-    await editProfileCubit.fetchUserDetail(userId: editProfileCubit.id);
-    editProfileCubit.fullNameController.text =
-        editProfileCubit.userModel?.name ?? '';
-    editProfileCubit.emailAddController.text =
-        editProfileCubit.userModel?.email ?? '';
-    editProfileCubit.companyNameController.text =
-        editProfileCubit.userModel?.companyName ?? '';
-    editProfileCubit.industryTypeController.text =
-        editProfileCubit.userModel?.industryType ?? '';
+    editProfileCubit.fullNameController.text = widget.userModel.name ?? '';
+    editProfileCubit.emailAddController.text = widget.userModel.email ?? '';
+    editProfileCubit.companyNameController.text = widget.userModel.companyName ?? '';
+    editProfileCubit.industryTypeController.text = widget.userModel.industryType ?? '';
   }
 
   @override
@@ -60,11 +54,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           child: BlocConsumer<EditProfileCubit, EditProfileState>(
             bloc: editProfileCubit,
             listener: (context, state) {
-              if (state is EditProfileSuccessState) {
-                Navigator.of(context).pop();
-              }
-              if (state is EditProfileErrorState) {
-                Utils.errorMessage(context, state.error);
+              switch(state) {
+                case EditProfileSuccessState():
+                  Navigator.of(context).pop(true);
+                  break;
+                case EditProfileErrorState():
+                  Utils.errorMessage(context, state.error);
+                  break;
               }
             },
             builder: (context, state) {
@@ -133,7 +129,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             width: 174,
                             title: AppStrings.cancel,
                             onPressed: () {
-                              Navigator.of(context).pop();
+                              Navigator.of(context).pop(false);
                             },
                           ),
                         ),
@@ -143,19 +139,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             width: 174,
                             title: AppStrings.save,
                             onPressed: () {
-                              if (editProfileCubit.formKey.currentState!.validate()) {
+                              if (editProfileCubit.formKey.currentState!
+                                  .validate()) {
                                 editProfileCubit.updateUser(
-                                  userId: editProfileCubit.id,
-                                  name: editProfileCubit.fullNameController.text,
-                                  companyName: editProfileCubit.companyNameController.text,
-                                  industryType: editProfileCubit.industryTypeController.text,
-                                  profilePicture: editProfileCubit.profilePicture.isNotEmpty
+                                  userId: widget.userModel.sId ?? '',
+                                  name:
+                                      editProfileCubit.fullNameController.text,
+                                  companyName: editProfileCubit
+                                      .companyNameController.text,
+                                  industryType: editProfileCubit
+                                      .industryTypeController.text,
+                                  profilePicture: editProfileCubit
+                                          .profilePicture.isNotEmpty
                                       ? editProfileCubit.profilePicture
                                       : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wQAAwEB/atfz7AAAAAASUVORK5CYII=',
                                 );
                               }
                             },
-                            isLoading: state is EditProfileLoadingState ? true : false,
+                            isLoading:
+                                state is EditProfileLoadingState ? true : false,
                           ),
                         ),
                       ],

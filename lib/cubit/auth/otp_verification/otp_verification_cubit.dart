@@ -48,9 +48,10 @@ class OtpVerificationCubit extends Cubit<OtpVerificationState> {
         'phoneNumber': phoneNumber,
       };
 
-      await authRepositoryImpl.sendOTP(requestData);
+      final data = await authRepositoryImpl.sendOTP(requestData);
       startResendOtpTimer();
       emit(OtpVerificationInitial());
+      emit(OtpResendSuccessState(data));
     } catch (error) {
       emit(OtpVerificationErrorState(ErrorHandler.handle(error).failure.message));
     }

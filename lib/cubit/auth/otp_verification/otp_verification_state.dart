@@ -1,7 +1,6 @@
 part of 'otp_verification_cubit.dart';
 
-@immutable
-sealed class OtpVerificationState {}
+abstract class OtpVerificationState {}
 
 final class OtpVerificationInitial extends OtpVerificationState {}
 
@@ -29,3 +28,8 @@ class OtpVerificationTimerState extends OtpVerificationState {
   OtpVerificationTimerState(this.remainingTime, this.canResendOtp);
 }
 
+final class OtpResendSuccessState extends OtpVerificationState {
+  final String? message;
+
+  OtpResendSuccessState(this.message);
+}

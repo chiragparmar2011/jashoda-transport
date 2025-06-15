@@ -59,7 +59,6 @@ class NetworkApiService extends BaseApiService {
     );
   }
 
-  @override
   Future<Response> patch({
     required String endPoint,
     data,

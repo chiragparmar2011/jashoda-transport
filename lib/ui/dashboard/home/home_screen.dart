@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jashoda_transport/core/helper/shared_preference.dart';
 import 'package:jashoda_transport/core/routes/app_routes.dart';
 import 'package:jashoda_transport/core/utils/app_assets.dart';
 import 'package:jashoda_transport/core/utils/app_colors.dart';
@@ -27,15 +26,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final HomeCubit homeCubit = injector<HomeCubit>();
-  String id = '';
-  String userName = '';
-  final _prefs = injector.get<SharedPreferenceHelper>();
 
   @override
   void initState() {
-    id = _prefs.getString('id');
-    userName = _prefs.getUser()?.name ?? '';
-    homeCubit.fetchRecentCalculation(id);
+    homeCubit.id = homeCubit.prefs.getString('id') ?? '';
+    homeCubit.userName = homeCubit.prefs.getUser()?.name ?? '';
+    homeCubit.fetchRecentCalculation(homeCubit.id ?? '');
     super.initState();
   }
 
@@ -65,6 +61,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Dimentions.sizedBox24H,
                   RichText(
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     text: TextSpan(
                       text: AppStrings.welcome,
                       style: TextStyles().textStylesNunito(
@@ -74,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       children: [
                         TextSpan(
-                          text: userName,
+                          text: homeCubit.userName,
                           style: TextStyles().textStylesNunito(
                             fontSize: 24,
                             fontWeight: FontWeight.w700,
@@ -216,7 +214,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
                                 Text(
-                                  Utils().formattedDate('${data?.createdAt}' ?? ''),
+                                  Utils().formattedDate('${data?.createdAt}'),
                                   style: TextStyles().textStylesMontserrat(
                                     fontSize: 12,
                                     color: AppColors.darkBlackGrey,
@@ -227,7 +225,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Row(
                               children: [
                                 Text(
-                                  AppStrings.dimentions,
+                                  AppStrings.dimensions,
                                   style: TextStyles().textStylesMontserrat(
                                     fontSize: 12,
                                     color: AppColors.darkGrey,

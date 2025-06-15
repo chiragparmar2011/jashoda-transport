@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:jashoda_transport/core/utils/app_colors.dart';
-import 'package:jashoda_transport/core/utils/dimentions.dart';
 import 'package:jashoda_transport/core/utils/text_styles.dart';
 
 class CheckButton extends StatelessWidget {

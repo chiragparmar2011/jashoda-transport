@@ -155,7 +155,7 @@ class _SavedCalculationScreenState extends State<SavedCalculationScreen> {
                                   Row(
                                     children: [
                                       Text(
-                                        AppStrings.dimentions,
+                                        AppStrings.dimensions,
                                         style:
                                             TextStyles().textStylesMontserrat(
                                           fontSize: 12,

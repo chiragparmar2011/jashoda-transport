@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jashoda_transport/core/helper/shared_preference.dart';
+import 'package:jashoda_transport/core/routes/app_routes.dart';
 import 'package:jashoda_transport/core/utils/app_assets.dart';
 import 'package:jashoda_transport/core/utils/app_colors.dart';
 import 'package:jashoda_transport/core/utils/app_strings.dart';
@@ -34,12 +35,9 @@ class _CreateNewCalculationScreenState
     extends State<CreateNewCalculationScreen> {
   final CalculationCubit calculationCubit = injector<CalculationCubit>();
 
-  final _prefs = injector.get<SharedPreferenceHelper>();
-  String? id = '';
-
   @override
   void initState() {
-    id = _prefs.getString('id');
+    calculationCubit.id = calculationCubit.prefs.getString('id');
     super.initState();
   }
 
@@ -57,34 +55,36 @@ class _CreateNewCalculationScreenState
       child: BlocConsumer<CalculationCubit, CalculationState>(
         bloc: calculationCubit,
         listener: (context, state) {
-          if (state is SubmitBoxLoadedState) {
-            final createLoadModel = state.createLoadModel;
-
-            if (createLoadModel?.date == null ||
-                (createLoadModel?.date ?? '').isEmpty) {
-              Utils.errorMessage(context, "Invalid date received from server.");
-              return;
-            }
-            Utils.successMessage(context, "Box Added");
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => VehicleLoadedScreen(
-                  createLoadModel: state.createLoadModel,
-                ),
-              ),
-            );
-          }
-
-          if (state is SaveBoxErrorState) {
-            Utils.errorMessage(context, state.error);
-          }
-
-          if (state is SubmitBoxErrorState) {
-            Utils.errorMessage(
-              context,
-              'No suitable truck can accommodate your boxes based on the given details.',
-            );
+          switch (state) {
+            case SubmitBoxLoadedState():
+              final data = state.createLoadModel;
+              if (data?.date == null || (data?.date ?? '').isEmpty) {
+                Utils.errorMessage(
+                  context,
+                  "Invalid date received from server.",
+                );
+                return;
+              }
+              Utils.successMessage(context, "Box Added");
+              Navigator.pushNamed(
+                context,
+                MyRoutes.vehicleLoadedScreen,
+                arguments: {
+                  'data': data,
+                },
+              );
+              break;
+            case SaveBoxErrorState():
+              Utils.errorMessage(context, state.error);
+              break;
+            case SubmitBoxErrorState():
+              Utils.errorMessage(
+                context,
+                'No suitable truck can accommodate your boxes based on the given details.',
+              );
+              break;
+            default:
+              break;
           }
         },
         builder: (context, state) {
@@ -167,7 +167,7 @@ class _CreateNewCalculationScreenState
                           cancelText: AppStrings.cancel,
                           confirmOnPressed: () {
                             calculationCubit.submitBox(
-                              userId: id,
+                              userId: calculationCubit.id,
                             );
                             Navigator.pop(context);
                           },
@@ -227,9 +227,7 @@ class _CreateNewCalculationScreenState
             },
           ),
         ),
-        Dimentions.sizedBox24H,
-        calculationCubit.boxes.isNotEmpty?
-        Container(child: Text(calculationCubit.boxes.length.toString()),):Container(),
+        Dimentions.sizedBox12H,
         Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
@@ -255,7 +253,7 @@ class _CreateNewCalculationScreenState
                     child: DimensionFromField(
                       controller: calculationCubit.lengthController,
                       hintText: AppStrings.enterLength,
-                      label:"Enter Length" ,
+                      label: "Enter Length",
                     ),
                   ),
                   Dimentions.sizedBox16W,
@@ -263,8 +261,7 @@ class _CreateNewCalculationScreenState
                     child: DimensionFromField(
                       controller: calculationCubit.widthController,
                       hintText: AppStrings.enterWidth,
-                      label:"Enter Width" ,
-
+                      label: "Enter Width",
                     ),
                   ),
                 ],
@@ -278,8 +275,7 @@ class _CreateNewCalculationScreenState
                     child: DimensionFromField(
                       controller: calculationCubit.heightController,
                       hintText: AppStrings.enterHeight,
-                      label:"Enter Height" ,
-
+                      label: "Enter Height",
                     ),
                   ),
                   Dimentions.sizedBox16W,
@@ -287,8 +283,7 @@ class _CreateNewCalculationScreenState
                     child: DimensionFromField(
                       controller: calculationCubit.quantityController,
                       hintText: AppStrings.noOfQuantity,
-                      label:"No. of quantity" ,
-
+                      label: "No. of quantity",
                     ),
                   ),
                 ],
@@ -302,8 +297,7 @@ class _CreateNewCalculationScreenState
                     child: DimensionFromField(
                       controller: calculationCubit.weightController,
                       hintText: AppStrings.enterWeight,
-                      label:"Enter Weight" ,
-
+                      label: "Enter Weight",
                     ),
                   ),
                   Dimentions.sizedBox16W,
@@ -419,7 +413,6 @@ class _CreateNewCalculationScreenState
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Left section: Box details
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

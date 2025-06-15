@@ -8,6 +8,7 @@ class Dimentions {
   static const SizedBox sizedBox4H = SizedBox(height: 4);
   static const SizedBox sizedBox8H = SizedBox(height: 8);
   static const SizedBox sizedBox12H = SizedBox(height: 12);
+  static const SizedBox sizedBox10H = SizedBox(height: 10);
   static const SizedBox sizedBox16H = SizedBox(height: 16);
   static const SizedBox sizedBox20H = SizedBox(height: 20);
   static const SizedBox sizedBox24H = SizedBox(height: 24);

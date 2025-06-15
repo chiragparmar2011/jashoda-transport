@@ -35,9 +35,12 @@ class EditProfileCubit extends Cubit<EditProfileState> {
       if (data != null) {
         userModel = data;
       }
+      prefs.setUser(userModel);
       emit(FetchUserDetailSuccessState(data));
     } catch (error) {
-      emit(FetchUserDetailErrorState(ErrorHandler.handle(error).failure.message));
+      emit(
+        FetchUserDetailErrorState(ErrorHandler.handle(error).failure.message),
+      );
     }
   }
 

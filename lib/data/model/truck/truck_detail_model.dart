@@ -1,6 +1,7 @@
 import 'package:jashoda_transport/data/model/response_model.dart';
 
-class TruckDetailModel extends ResponseDataObjectSerialization<TruckDetailModel> {
+class TruckDetailModel
+    extends ResponseDataObjectSerialization<TruckDetailModel> {
   TruckDetails? truckDetails;
   String? createdAt;
 
@@ -65,16 +66,16 @@ class TruckDetails extends ResponseDataObjectSerialization<TruckDetails> {
 }
 
 class Dimensions extends ResponseDataObjectSerialization<Dimensions> {
-  int? l;
-  int? w;
-  int? h;
+  double? l;
+  double? w;
+  double? h;
 
   Dimensions({this.l, this.w, this.h});
 
   Dimensions.fromJson(Map<String, dynamic> json) {
-    l = json['L'];
-    w = json['W'];
-    h = json['H'];
+    l = (json['L'] as num).toDouble();
+    w = (json['W'] as num).toDouble();
+    h = (json['H'] as num).toDouble();
   }
 
   @override

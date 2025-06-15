@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jashoda_transport/data/model/create_load_model.dart';
+import 'package:jashoda_transport/data/model/user/usermodel.dart';
 import 'package:jashoda_transport/ui/auth/mobile/enter_mo_number_screen.dart';
 import 'package:jashoda_transport/ui/auth/mobile/otp_verification_screen.dart';
 import 'package:jashoda_transport/ui/auth/register/registration_screen.dart';
@@ -59,27 +61,32 @@ class MyRoutes {
         );
       case homeScreen:
         return MaterialPageRoute(
-          builder: (context) => HomeScreen(),
+          builder: (context) => const HomeScreen(),
         );
       case createCalculationScreen:
         return MaterialPageRoute(
-          builder: (context) => CreateNewCalculationScreen(),
+          builder: (context) => const CreateNewCalculationScreen(),
         );
       case savedCalculationScreen:
         return MaterialPageRoute(
-          builder: (context) => SavedCalculationScreen(),
+          builder: (context) => const SavedCalculationScreen(),
         );
       case profileScreen:
         return MaterialPageRoute(
-          builder: (context) => ProfileScreen(),
+          builder: (context) => const ProfileScreen(),
         );
       case editProfileScreen:
+        final Map<String, dynamic> args =
+            settings.arguments as Map<String, dynamic>;
+        final UserModel userModel = args['userModel'];
         return MaterialPageRoute(
-          builder: (context) => EditProfileScreen(),
+          builder: (context) => EditProfileScreen(userModel: userModel),
         );
       case vehicleLoadedScreen:
+        final Map<String,dynamic> args = settings.arguments as Map<String,dynamic>;
+        final CreateLoadModel data = args['data'];
         return MaterialPageRoute(
-          builder: (context) => VehicleLoadedScreen(),
+          builder: (context) => VehicleLoadedScreen(data: data),
         );
       default:
     }

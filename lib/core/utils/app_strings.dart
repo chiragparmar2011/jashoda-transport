@@ -74,9 +74,9 @@ class AppStrings {
   static const String addBox = 'Add Box';
 
   /// Vehicle Suggestion
-  static const String perfectVehicleForLoad = 'Perfect Vehicle For\nYour Load';
+  static const String truckCalculation = 'Truck calculation result';
   static const String vehicleName = 'Vehicle Name';
-  static const String dimentions = 'Dimensions:';
+  static const String dimensions = 'Dimensions:';
   static const String weightCapacity = 'Weight Capacity';
   static const String date = 'Date';
   // static const String noOfBoxes = 'No. of boxes: 3';
@@ -89,6 +89,8 @@ class AppStrings {
   static const String settings = 'Settings';
   static const String helpAndSupport = 'Help & Support';
   static const String termsAndCondition = 'Terms & Conditions';
+  static const String logOutContent = 'Are you sure you want to logout?';
+
 
   /// Confirmation Strings
   static const String youWantToDelete = 'Are you sure you want to delete?';
