@@ -26,7 +26,7 @@ class BoxFlowState extends CalculationState {
 final class SaveCalculationLoadingState extends CalculationState {}
 
 final class SaveCalculationLoadedState extends CalculationState {
-  final List<TruckDetailModel>? truckDetailModel;
+  final List<TruckListModel>? truckDetailModel;
 
   SaveCalculationLoadedState(this.truckDetailModel);
 }

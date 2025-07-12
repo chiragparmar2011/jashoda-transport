@@ -1,6 +1,6 @@
 import 'package:jashoda_transport/data/model/response_model.dart';
 
-import 'truck/truck_detail_model.dart';
+import '../truck/truck_list_model.dart';
 
 class CreateLoadModel extends ResponseDataObjectSerialization<CreateLoadModel> {
   TruckDetails? truckDetails;

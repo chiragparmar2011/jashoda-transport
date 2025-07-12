@@ -9,7 +9,7 @@ import 'package:jashoda_transport/core/utils/text_styles.dart';
 import 'package:jashoda_transport/core/widgets/buttons/common_button.dart';
 import 'package:jashoda_transport/core/widgets/image_assets.dart';
 import 'package:jashoda_transport/cubit/bottomnav/bottom_nav_cubit.dart';
-import 'package:jashoda_transport/data/model/create_load_model.dart';
+import 'package:jashoda_transport/data/model/load/create_load_model.dart';
 import 'package:jashoda_transport/ui/dashboard/dashboard_screen.dart';
 
 class VehicleLoadedScreen extends StatefulWidget {

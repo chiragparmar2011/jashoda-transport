@@ -9,5 +9,6 @@ class AppUrl {
   static const String updateUser = "/auth/user-update";
   static const String recentCalculation = "/truck-load/get-recent-truck-details";
   static const String loadCalculation = "/truck-load/create-load-calculation";
-  static const String getTruckDetail = "/truck-load/get-truck-details";
+  static const String fetchTruckDetail = "/truck-load/get-truck-details";
+  static const String fetchSingleTruck = "/truck-load/get-truck-details-by-id";
 }
