@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jashoda_transport/core/helper/shared_preference.dart';
 import 'package:jashoda_transport/core/routes/app_routes.dart';
-import 'package:jashoda_transport/core/utils/app_assets.dart';
 import 'package:jashoda_transport/core/utils/app_colors.dart';
 import 'package:jashoda_transport/core/utils/app_enum.dart';
 import 'package:jashoda_transport/core/utils/app_strings.dart';
@@ -11,13 +10,11 @@ import 'package:jashoda_transport/core/utils/text_styles.dart';
 import 'package:jashoda_transport/core/utils/utils.dart';
 import 'package:jashoda_transport/core/widgets/buttons/common_button.dart';
 import 'package:jashoda_transport/core/widgets/dialog/common_progress_indicator.dart';
-import 'package:jashoda_transport/core/widgets/image_assets.dart';
 import 'package:jashoda_transport/cubit/bottomnav/bottom_nav_cubit.dart';
 import 'package:jashoda_transport/cubit/dashboard/calculation/calculation_cubit.dart';
 import 'package:jashoda_transport/data/model/load/box.dart';
 import 'package:jashoda_transport/data/model/load/create_load_model.dart';
 import 'package:jashoda_transport/getit_injector.dart';
-import 'package:jashoda_transport/ui/dashboard/dashboard_screen.dart';
 import 'package:jashoda_transport/ui/widget/truck_view.dart';
 
 class VehicleLoadedScreen extends StatefulWidget {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jashoda_transport/core/utils/app_assets.dart';
 import 'package:jashoda_transport/core/utils/app_colors.dart';
 import 'package:jashoda_transport/core/utils/app_strings.dart';
 import 'package:jashoda_transport/core/utils/dimentions.dart';
@@ -8,7 +7,6 @@ import 'package:jashoda_transport/core/utils/text_styles.dart';
 import 'package:jashoda_transport/core/utils/utils.dart';
 import 'package:jashoda_transport/core/widgets/buttons/back_arrow.dart';
 import 'package:jashoda_transport/core/widgets/dialog/common_progress_indicator.dart';
-import 'package:jashoda_transport/core/widgets/image_assets.dart';
 import 'package:jashoda_transport/cubit/dashboard/home/home_cubit.dart';
 import 'package:jashoda_transport/getit_injector.dart';
 import 'package:jashoda_transport/ui/widget/truck_view.dart';

@@ -15,7 +15,6 @@ import 'package:jashoda_transport/cubit/auth/otp_verification/otp_verification_c
 import 'package:jashoda_transport/cubit/bottomnav/bottom_nav_cubit.dart';
 import 'package:jashoda_transport/getit_injector.dart';
 import 'package:jashoda_transport/ui/auth/mobile/widget/custom_code_field.dart';
-import 'package:jashoda_transport/ui/dashboard/dashboard_screen.dart';
 
 class OtpVerificationScreen extends StatelessWidget {
   OtpVerificationScreen({required this.phoneNumber, super.key});
