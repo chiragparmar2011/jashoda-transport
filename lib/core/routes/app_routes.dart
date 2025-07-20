@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:jashoda_transport/data/model/create_load_model.dart';
+import 'package:jashoda_transport/data/model/load/box.dart';
+import 'package:jashoda_transport/data/model/load/create_load_model.dart';
 import 'package:jashoda_transport/data/model/user/usermodel.dart';
 import 'package:jashoda_transport/ui/auth/mobile/enter_mo_number_screen.dart';
 import 'package:jashoda_transport/ui/auth/mobile/otp_verification_screen.dart';
@@ -12,6 +13,7 @@ import 'package:jashoda_transport/ui/dashboard/profile/profile_screen.dart';
 import 'package:jashoda_transport/ui/onboard/onboard_screen.dart';
 import 'package:jashoda_transport/ui/profile_section/edit_profile_screen.dart';
 import 'package:jashoda_transport/ui/splash/splash_screen.dart';
+import 'package:jashoda_transport/ui/vehicle/truck_detail_screen.dart';
 import 'package:jashoda_transport/ui/vehicle/vehicle_loaded_screen.dart';
 
 class MyRoutes {
@@ -27,6 +29,7 @@ class MyRoutes {
   static const String profileScreen = '/profileScreen';
   static const String editProfileScreen = '/editProfileScreen';
   static const String vehicleLoadedScreen = '/vehicleLoadedScreen';
+  static const String truckDetailScreen = '/truckDetailScreen';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -68,8 +71,13 @@ class MyRoutes {
           builder: (context) => const CreateNewCalculationScreen(),
         );
       case savedCalculationScreen:
+        final Map<String, dynamic> args =
+            settings.arguments as Map<String, dynamic>;
+        final String truckId = args['truckId'];
         return MaterialPageRoute(
-          builder: (context) => const SavedCalculationScreen(),
+          builder: (context) => SavedCalculationScreen(
+            truckId: truckId,
+          ),
         );
       case profileScreen:
         return MaterialPageRoute(
@@ -83,10 +91,19 @@ class MyRoutes {
           builder: (context) => EditProfileScreen(userModel: userModel),
         );
       case vehicleLoadedScreen:
-        final Map<String,dynamic> args = settings.arguments as Map<String,dynamic>;
+        final Map<String, dynamic> args =
+            settings.arguments as Map<String, dynamic>;
         final CreateLoadModel data = args['data'];
+        final List<Box> boxes = args['boxes'];
         return MaterialPageRoute(
-          builder: (context) => VehicleLoadedScreen(data: data),
+          builder: (context) => VehicleLoadedScreen(data: data, boxes: boxes),
+        );
+      case truckDetailScreen:
+        final Map<String, dynamic> args =
+            settings.arguments as Map<String, dynamic>;
+        final String truckId = args['truckId'];
+        return MaterialPageRoute(
+          builder: (context) => TruckDetailScreen(truckId: truckId),
         );
       default:
     }

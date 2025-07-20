@@ -14,8 +14,9 @@ import 'package:jashoda_transport/core/widgets/dialog/common_progress_indicator.
 import 'package:jashoda_transport/core/widgets/image_assets.dart';
 import 'package:jashoda_transport/cubit/bottomnav/bottom_nav_cubit.dart';
 import 'package:jashoda_transport/cubit/dashboard/home/home_cubit.dart';
-import 'package:jashoda_transport/data/model/truck/truck_detail_model.dart';
+import 'package:jashoda_transport/data/model/truck/truck_list_model.dart';
 import 'package:jashoda_transport/getit_injector.dart';
+import 'package:jashoda_transport/ui/widget/truck_view.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -167,26 +168,31 @@ class _HomeScreenState extends State<HomeScreen> {
             itemCount: (homeCubit.truckDetailList ?? []).length,
             shrinkWrap: true,
             itemBuilder: (context, index) {
-              TruckDetailModel? data = homeCubit.truckDetailList?[index];
-              return Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 16,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.greyLightWhite),
-                ),
-                child: InkWell(
-                  onTap: () {
-                    print("data is===>${homeCubit.truckDetailList?[index]}");
-                  },
+              TruckListModel? data = homeCubit.truckDetailList?[index];
+              return InkWell(
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    MyRoutes.truckDetailScreen,
+                    arguments: {
+                      "truckId": data?.truckId,
+                    },
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 16,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppColors.greyLightWhite),
+                  ),
                   child: Row(
                     children: [
-                      ImageAssets(
-                        image: AssetsPath.deliveryTruckIcon,
-                        height: 48,
-                        width: 48,
+                      const TruckViewWidget(
+                        height: 54,
+                        width: 54,
                       ),
                       Dimentions.sizedBox22W,
                       Expanded(
@@ -233,13 +239,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 Flexible(
                                   child: Text(
-                                    ' ${data?.truckDetails?.dimensions?.l ?? ''}'
+                                    ' ${data?.truckDetails?.dimensions?.length ?? '0.0'}'
                                     ' ${'x'} '
-                                    '${data?.truckDetails?.dimensions?.w ?? ''}'
+                                    '${data?.truckDetails?.dimensions?.width ?? '0.0'}'
                                     ' ${'x'} '
-                                    '${data?.truckDetails?.dimensions?.h ?? ''}'
-                                    ' ${'x'} '
-                                    '${/*data.dimensionType*/ 'in foot'}',
+                                    '${data?.truckDetails?.dimensions?.height ?? '0.0'}',
+                                    // '${/*data.dimensionType*/ 'in foot'}',
                                     style: TextStyles().textStylesMontserrat(
                                       fontSize: 12,
                                       color: AppColors.darkBlackGrey,

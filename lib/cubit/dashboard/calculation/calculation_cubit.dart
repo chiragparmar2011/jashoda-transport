@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jashoda_transport/core/error/error_handler.dart';
 import 'package:jashoda_transport/core/helper/shared_preference.dart';
 import 'package:jashoda_transport/core/utils/app_enum.dart';
-import 'package:jashoda_transport/data/model/create_load_model.dart';
+import 'package:jashoda_transport/data/model/load/create_load_model.dart';
 import 'package:jashoda_transport/data/model/load/dimension_model.dart';
-import 'package:jashoda_transport/data/model/new/box.dart';
-import 'package:jashoda_transport/data/model/truck/truck_detail_model.dart';
+import 'package:jashoda_transport/data/model/load/box.dart';
+import 'package:jashoda_transport/data/model/truck/truck_list_model.dart';
 import 'package:jashoda_transport/data/repo_impl/truck_load_repo_impl/truck_load_repository_impl.dart';
 import 'package:jashoda_transport/getit_injector.dart';
 
@@ -47,7 +47,7 @@ class CalculationCubit extends Cubit<CalculationState> {
   int nextBoxNumber = 1;
   bool isAddingBox = false;
 
-  List<TruckDetailModel>? truckDetailList = [];
+  List<TruckListModel>? truckDetailList = [];
   CreateLoadModel? createLoadModel;
 
   final TextEditingController lengthController = TextEditingController();
@@ -63,7 +63,8 @@ class CalculationCubit extends Cubit<CalculationState> {
       return;
     }
 
-    String oldDimension = unitDimensionList.firstWhere((unit) => unit.isSelected).name;
+    String oldDimension =
+        unitDimensionList.firstWhere((unit) => unit.isSelected).name;
     String newDimension = unitDimensionList[index].name;
 
     unitDimensionList[index].isSelected = true;
@@ -238,8 +239,26 @@ class CalculationCubit extends Cubit<CalculationState> {
       );
       nextBoxNumber = 1;
       if (createLoadModel != null) {
-        emit(SubmitBoxLoadedState(createLoadModel));
+        emit(SubmitBoxLoadedState(createLoadModel, boxes: boxes));
       }
+    } catch (error) {
+      emit(SubmitBoxErrorState(ErrorHandler.handle(error).failure.message));
+    }
+  }
+
+  Future<void> submitSelectedTruck({
+    String? userId,
+    Map<String, dynamic>? truckDetails,
+    List<Box>? boxes,
+  }) async {
+    emit(SubmitBoxLoadingState());
+    try {
+      await truckLoadRepositoryImpl.saveTruckLoad(
+        userId: userId,
+        truckDetails: truckDetails,
+        boxes: boxes,
+      );
+      emit(SubmitTruckLoadedState());
     } catch (error) {
       emit(SubmitBoxErrorState(ErrorHandler.handle(error).failure.message));
     }

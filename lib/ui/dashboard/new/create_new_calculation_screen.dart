@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jashoda_transport/core/helper/shared_preference.dart';
 import 'package:jashoda_transport/core/routes/app_routes.dart';
 import 'package:jashoda_transport/core/utils/app_assets.dart';
 import 'package:jashoda_transport/core/utils/app_colors.dart';
@@ -19,7 +18,6 @@ import 'package:jashoda_transport/core/widgets/textformfield/dimension_from_fiel
 import 'package:jashoda_transport/cubit/dashboard/calculation/calculation_cubit.dart';
 import 'package:jashoda_transport/data/model/load/dimension_model.dart';
 import 'package:jashoda_transport/getit_injector.dart';
-import 'package:jashoda_transport/ui/vehicle/vehicle_loaded_screen.dart';
 
 import 'widget/dimension_widget.dart';
 
@@ -58,19 +56,14 @@ class _CreateNewCalculationScreenState
           switch (state) {
             case SubmitBoxLoadedState():
               final data = state.createLoadModel;
-              if (data?.date == null || (data?.date ?? '').isEmpty) {
-                Utils.errorMessage(
-                  context,
-                  "Invalid date received from server.",
-                );
-                return;
-              }
+              final boxes = state.boxes;
               Utils.successMessage(context, "Box Added");
               Navigator.pushNamed(
                 context,
                 MyRoutes.vehicleLoadedScreen,
                 arguments: {
                   'data': data,
+                  'boxes': boxes,
                 },
               );
               break;

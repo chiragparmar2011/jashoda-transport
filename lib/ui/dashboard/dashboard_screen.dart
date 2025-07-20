@@ -56,21 +56,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         vertical: 8.0,
                       ),
                       decoration: BoxDecoration(
-                        color: isSelected ? AppColors.primaryBlue : Colors.transparent,
+                        color: isSelected
+                            ? AppColors.primaryBlue
+                            : Colors.transparent,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           ImageAssets(
-                            image: isSelected ? getSelectedIcon(item) : getUnselectedIcon(item),
-                            color: isSelected ? AppColors.white : AppColors.black,
+                            image: isSelected
+                                ? getSelectedIcon(item)
+                                : getUnselectedIcon(item),
+                            color:
+                                isSelected ? AppColors.white : AppColors.black,
                           ),
                           const SizedBox(height: 4),
                           Text(
                             getLabel(item),
                             style: TextStyle(
-                              color: isSelected ? AppColors.white : AppColors.black,
+                              color: isSelected
+                                  ? AppColors.white
+                                  : AppColors.black,
                             ),
                           ),
                         ],

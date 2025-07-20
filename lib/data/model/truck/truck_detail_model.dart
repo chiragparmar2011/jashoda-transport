@@ -1,17 +1,41 @@
 import 'package:jashoda_transport/data/model/response_model.dart';
+import 'package:jashoda_transport/data/model/truck/truck_list_model.dart';
 
 class TruckDetailModel
     extends ResponseDataObjectSerialization<TruckDetailModel> {
   TruckDetails? truckDetails;
+  String? sId;
+  String? user;
+  List<Boxes>? boxes;
   String? createdAt;
+  String? updatedAt;
+  int? iV;
 
-  TruckDetailModel({this.truckDetails, this.createdAt});
+  TruckDetailModel({
+    this.truckDetails,
+    this.sId,
+    this.user,
+    this.boxes,
+    this.createdAt,
+    this.updatedAt,
+    this.iV,
+  });
 
   TruckDetailModel.fromJson(Map<String, dynamic> json) {
     truckDetails = json['truck_details'] != null
         ? TruckDetails.fromJson(json['truck_details'])
         : null;
+    sId = json['_id'];
+    user = json['user'];
+    if (json['boxes'] != null) {
+      boxes = <Boxes>[];
+      json['boxes'].forEach((v) {
+        boxes!.add(Boxes.fromJson(v));
+      });
+    }
     createdAt = json['createdAt'];
+    updatedAt = json['updatedAt'];
+    iV = json['__v'];
   }
 
   @override
@@ -20,7 +44,14 @@ class TruckDetailModel
     if (truckDetails != null) {
       data['truck_details'] = truckDetails!.toJson();
     }
+    data['_id'] = sId;
+    data['user'] = user;
+    if (boxes != null) {
+      data['boxes'] = boxes!.map((v) => v.toJson()).toList();
+    }
     data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    data['__v'] = iV;
     return data;
   }
 
@@ -30,65 +61,50 @@ class TruckDetailModel
   }
 }
 
-class TruckDetails extends ResponseDataObjectSerialization<TruckDetails> {
-  Dimensions? dimensions;
-  String? name;
-  int? totalWeight;
-  int? maxLoad;
+class Boxes extends ResponseDataObjectSerialization<Boxes> {
+  int? boxLength;
+  int? boxWidth;
+  int? boxHeight;
+  int? boxWeight;
+  int? boxQuantity;
+  bool? isStackable;
+  String? sId;
 
-  TruckDetails({this.dimensions, this.name, this.totalWeight, this.maxLoad});
+  Boxes({
+    this.boxLength,
+    this.boxWidth,
+    this.boxHeight,
+    this.boxWeight,
+    this.boxQuantity,
+    this.isStackable,
+    this.sId,
+  });
 
-  TruckDetails.fromJson(Map<String, dynamic> json) {
-    dimensions = json['dimensions'] != null
-        ? Dimensions.fromJson(json['dimensions'])
-        : null;
-    name = json['name'];
-    totalWeight = json['total_weight'];
-    maxLoad = json['max_load'];
+  Boxes.fromJson(Map<String, dynamic> json) {
+    boxLength = json['box_length'];
+    boxWidth = json['box_width'];
+    boxHeight = json['box_height'];
+    boxWeight = json['box_weight'];
+    boxQuantity = json['box_quantity'];
+    isStackable = json['is_stackable'];
+    sId = json['_id'];
   }
 
   @override
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    if (dimensions != null) {
-      data['dimensions'] = dimensions!.toJson();
-    }
-    data['name'] = name;
-    data['total_weight'] = totalWeight;
-    data['max_load'] = maxLoad;
+    data['box_length'] = boxLength;
+    data['box_width'] = boxWidth;
+    data['box_height'] = boxHeight;
+    data['box_weight'] = boxWeight;
+    data['box_quantity'] = boxQuantity;
+    data['is_stackable'] = isStackable;
+    data['_id'] = sId;
     return data;
   }
 
   @override
-  TruckDetails fromJson(Map<String, dynamic> json) {
-    return TruckDetails.fromJson(json);
-  }
-}
-
-class Dimensions extends ResponseDataObjectSerialization<Dimensions> {
-  double? l;
-  double? w;
-  double? h;
-
-  Dimensions({this.l, this.w, this.h});
-
-  Dimensions.fromJson(Map<String, dynamic> json) {
-    l = (json['L'] as num).toDouble();
-    w = (json['W'] as num).toDouble();
-    h = (json['H'] as num).toDouble();
-  }
-
-  @override
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['L'] = l;
-    data['W'] = w;
-    data['H'] = h;
-    return data;
-  }
-
-  @override
-  Dimensions fromJson(Map<String, dynamic> json) {
-    return Dimensions.fromJson(json);
+  Boxes fromJson(Map<String, dynamic> json) {
+    return Boxes.fromJson(json);
   }
 }

@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jashoda_transport/core/helper/shared_preference.dart';
-import 'package:jashoda_transport/core/utils/app_assets.dart';
+import 'package:jashoda_transport/core/routes/app_routes.dart';
 import 'package:jashoda_transport/core/utils/app_colors.dart';
 import 'package:jashoda_transport/core/utils/app_strings.dart';
 import 'package:jashoda_transport/core/utils/dimentions.dart';
 import 'package:jashoda_transport/core/utils/text_styles.dart';
 import 'package:jashoda_transport/core/utils/utils.dart';
 import 'package:jashoda_transport/core/widgets/dialog/common_progress_indicator.dart';
-import 'package:jashoda_transport/core/widgets/image_assets.dart';
 import 'package:jashoda_transport/cubit/dashboard/calculation/calculation_cubit.dart';
-import 'package:jashoda_transport/data/model/truck/truck_detail_model.dart';
+import 'package:jashoda_transport/data/model/truck/truck_list_model.dart';
 import 'package:jashoda_transport/getit_injector.dart';
+import 'package:jashoda_transport/ui/widget/truck_view.dart';
 
 class SavedCalculationScreen extends StatefulWidget {
-  const SavedCalculationScreen({super.key});
+  const SavedCalculationScreen({this.truckId, super.key});
+  final String? truckId;
 
   @override
   State<SavedCalculationScreen> createState() => _SavedCalculationScreenState();
@@ -96,95 +97,107 @@ class _SavedCalculationScreenState extends State<SavedCalculationScreen> {
                     itemCount: (calculationCubit.truckDetailList ?? []).length,
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
-                      TruckDetailModel data =
+                      TruckListModel data =
                           (calculationCubit.truckDetailList ?? [])[index];
-                      return Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 16,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: AppColors.greyLightWhite),
-                        ),
-                        child: Row(
-                          children: [
-                            ImageAssets(
-                              image: AssetsPath.deliveryTruckIcon,
-                              height: 48,
-                              width: 48,
-                            ),
-                            Dimentions.sizedBox22W,
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    AppStrings.vehicleName,
-                                    style: TextStyles().textStylesMontserrat(
-                                      fontSize: 10,
-                                      color: AppColors.darkGrey,
+                      return InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            MyRoutes.truckDetailScreen,
+                            arguments: {
+                              "truckId": data.truckId,
+                            },
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 16,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: AppColors.greyLightWhite),
+                          ),
+                          child: Row(
+                            children: [
+                              const TruckViewWidget(
+                                height: 54,
+                                width: 54,
+                              ),
+                              Dimentions.sizedBox22W,
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      AppStrings.vehicleName,
+                                      style: TextStyles().textStylesMontserrat(
+                                        fontSize: 10,
+                                        color: AppColors.darkGrey,
+                                      ),
                                     ),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Flexible(
-                                        child: Text(
-                                          data.truckDetails?.name ?? '',
-                                          style:
-                                              TextStyles().textStylesMontserrat(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w700,
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Flexible(
+                                          child: Text(
+                                            data.truckDetails?.name ?? '',
+                                            style: TextStyles()
+                                                .textStylesMontserrat(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
                                           ),
-                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                      ),
-                                      Text(
-                                        (data.createdAt != null && data.createdAt!.isNotEmpty)
-                                            ? Utils().formattedDate(data.createdAt ?? '')
-                                            : 'Date Not Available',
-                                        style: TextStyles().textStylesMontserrat(
-                                          fontSize: 12,
-                                          color: AppColors.darkBlackGrey,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        AppStrings.dimensions,
-                                        style:
-                                            TextStyles().textStylesMontserrat(
-                                          fontSize: 12,
-                                          color: AppColors.darkGrey,
-                                        ),
-                                      ),
-                                      Flexible(
-                                        child: Text(
-                                          ' ${data.truckDetails?.dimensions?.l ?? ''}'
-                                          ' ${'x'} '
-                                          '${data.truckDetails?.dimensions?.w ?? ''}'
-                                          ' ${'x'} '
-                                          '${data.truckDetails?.dimensions?.h ?? ''}'
-                                          ' ${'x'} '
-                                          'in foot',
+                                        Text(
+                                          (data.createdAt != null &&
+                                                  data.createdAt!.isNotEmpty)
+                                              ? Utils().formattedDate(
+                                                  data.createdAt ?? '')
+                                              : 'Date Not Available',
                                           style:
                                               TextStyles().textStylesMontserrat(
                                             fontSize: 12,
                                             color: AppColors.darkBlackGrey,
                                           ),
-                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            )
-                          ],
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          AppStrings.dimensions,
+                                          style:
+                                              TextStyles().textStylesMontserrat(
+                                            fontSize: 12,
+                                            color: AppColors.darkGrey,
+                                          ),
+                                        ),
+                                        Flexible(
+                                          child: Text(
+                                            ' ${data.truckDetails?.dimensions?.length ?? '0.0'}'
+                                            ' ${'x'} '
+                                            '${data.truckDetails?.dimensions?.width ?? '0.0'}'
+                                            ' ${'x'} '
+                                            '${data.truckDetails?.dimensions?.height ?? '0.0'}',
+                                            // '${/*data.dimensionType*/ 'in foot'}',
+                                            style: TextStyles()
+                                                .textStylesMontserrat(
+                                              fontSize: 12,
+                                              color: AppColors.darkBlackGrey,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       );
                     },
