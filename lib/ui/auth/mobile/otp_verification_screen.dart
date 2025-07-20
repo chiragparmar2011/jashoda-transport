@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jashoda_transport/core/routes/app_routes.dart';
 import 'package:jashoda_transport/core/utils/app_assets.dart';
 import 'package:jashoda_transport/core/utils/app_colors.dart';
+import 'package:jashoda_transport/core/utils/app_enum.dart';
 import 'package:jashoda_transport/core/utils/app_strings.dart';
 import 'package:jashoda_transport/core/utils/dimentions.dart';
 import 'package:jashoda_transport/core/utils/text_styles.dart';
@@ -11,8 +12,10 @@ import 'package:jashoda_transport/core/widgets/buttons/back_arrow.dart';
 import 'package:jashoda_transport/core/widgets/buttons/common_button.dart';
 import 'package:jashoda_transport/core/widgets/image_assets.dart';
 import 'package:jashoda_transport/cubit/auth/otp_verification/otp_verification_cubit.dart';
+import 'package:jashoda_transport/cubit/bottomnav/bottom_nav_cubit.dart';
 import 'package:jashoda_transport/getit_injector.dart';
 import 'package:jashoda_transport/ui/auth/mobile/widget/custom_code_field.dart';
+import 'package:jashoda_transport/ui/dashboard/dashboard_screen.dart';
 
 class OtpVerificationScreen extends StatelessWidget {
   OtpVerificationScreen({required this.phoneNumber, super.key});
@@ -36,6 +39,9 @@ class OtpVerificationScreen extends StatelessWidget {
                 case OtpVerificationSuccessState():
                   Utils.successMessage(context, state.message);
                   if (state.isRegistered) {
+                    context
+                        .read<BottomNavCubit>()
+                        .updateNavItem(BottomNavItem.home);
                     Navigator.pushNamedAndRemoveUntil(
                       context,
                       MyRoutes.dashboardScreen,

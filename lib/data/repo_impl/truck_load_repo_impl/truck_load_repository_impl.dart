@@ -35,15 +35,41 @@ class TruckLoadRepositoryImpl extends TruckLoadBaseRepository {
     return result.data;
   }
 
-  Future<CreateLoadModel?> submitBoxDataRepo(
-      {String? userId, List<Box>? boxes}) async {
+  Future<CreateLoadModel?> submitBoxDataRepo({
+    String? userId,
+    List<Box>? boxes,
+  }) async {
     Map<String, dynamic> requestData = {
-      'userId': userId.toString(),
+      'userId': userId,
       'boxGroups': boxes?.map((box) => box.toJson()).toList(),
     };
     final response = await networkApiService.post(
       data: requestData,
       endPoint: AppUrl.loadCalculation,
+    );
+
+    if (response.data['success'] == false) {
+      throw Exception(response.data['message']);
+    }
+
+    final result =
+        ResponseDataObjectModel.fromJson(CreateLoadModel(), response.data);
+    return result.data;
+  }
+
+  Future<CreateLoadModel?> saveTruckLoad({
+    String? userId,
+    Map<String, dynamic>? truckDetails,
+    List<Box>? boxes,
+  }) async {
+    Map<String, dynamic> requestData = {
+      'userId': userId,
+      'truck_details': truckDetails,
+      'boxGroups': boxes?.map((box) => box.toJson()).toList(),
+    };
+    final response = await networkApiService.post(
+      data: requestData,
+      endPoint: AppUrl.saveTruckLoad,
     );
 
     if (response.data['success'] == false) {

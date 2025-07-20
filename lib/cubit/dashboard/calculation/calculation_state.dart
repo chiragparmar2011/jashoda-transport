@@ -1,7 +1,7 @@
 part of 'calculation_cubit.dart';
 
 @immutable
-sealed class CalculationState {}
+abstract class CalculationState {}
 
 final class CalculationInitial extends CalculationState {}
 
@@ -41,8 +41,9 @@ final class SubmitBoxLoadingState extends CalculationState {}
 
 final class SubmitBoxLoadedState extends CalculationState {
   final CreateLoadModel? createLoadModel;
+  final List<Box>? boxes;
 
-  SubmitBoxLoadedState(this.createLoadModel);
+  SubmitBoxLoadedState(this.createLoadModel, {this.boxes});
 }
 
 final class SubmitBoxErrorState extends CalculationState {
@@ -56,3 +57,5 @@ final class SaveBoxErrorState extends CalculationState {
 
   SaveBoxErrorState(this.error);
 }
+
+final class SubmitTruckLoadedState extends CalculationState {}

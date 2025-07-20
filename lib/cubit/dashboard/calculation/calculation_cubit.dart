@@ -63,7 +63,8 @@ class CalculationCubit extends Cubit<CalculationState> {
       return;
     }
 
-    String oldDimension = unitDimensionList.firstWhere((unit) => unit.isSelected).name;
+    String oldDimension =
+        unitDimensionList.firstWhere((unit) => unit.isSelected).name;
     String newDimension = unitDimensionList[index].name;
 
     unitDimensionList[index].isSelected = true;
@@ -238,8 +239,26 @@ class CalculationCubit extends Cubit<CalculationState> {
       );
       nextBoxNumber = 1;
       if (createLoadModel != null) {
-        emit(SubmitBoxLoadedState(createLoadModel));
+        emit(SubmitBoxLoadedState(createLoadModel, boxes: boxes));
       }
+    } catch (error) {
+      emit(SubmitBoxErrorState(ErrorHandler.handle(error).failure.message));
+    }
+  }
+
+  Future<void> submitSelectedTruck({
+    String? userId,
+    Map<String, dynamic>? truckDetails,
+    List<Box>? boxes,
+  }) async {
+    emit(SubmitBoxLoadingState());
+    try {
+      await truckLoadRepositoryImpl.saveTruckLoad(
+        userId: userId,
+        truckDetails: truckDetails,
+        boxes: boxes,
+      );
+      emit(SubmitTruckLoadedState());
     } catch (error) {
       emit(SubmitBoxErrorState(ErrorHandler.handle(error).failure.message));
     }

@@ -1,43 +1,71 @@
 import 'package:jashoda_transport/data/model/response_model.dart';
 
-import '../truck/truck_list_model.dart';
-
 class CreateLoadModel extends ResponseDataObjectSerialization<CreateLoadModel> {
-  TruckDetails? truckDetails;
-  String? date;
-  BoxDetails? boxDetails;
+  SelectedTruck? selectedTruck;
+  LoadingPlan? loadingPlan;
+  Efficiency? efficiency;
+  List<SafetyChecklist>? safetyChecklist;
+  List<AlternativeTrucks>? alternativeTrucks;
+  BoxDetailsItems? boxDetailsItems;
 
-  CreateLoadModel({this.truckDetails, this.date, this.boxDetails});
+  CreateLoadModel({
+    this.selectedTruck,
+    this.loadingPlan,
+    this.efficiency,
+    this.safetyChecklist,
+    this.alternativeTrucks,
+    this.boxDetailsItems,
+  });
 
   CreateLoadModel.fromJson(Map<String, dynamic> json) {
-    truckDetails = json['truckDetails'] != null
-        ? TruckDetails.fromJson(json['truckDetails'])
+    selectedTruck = json['selectedTruck'] != null
+        ? SelectedTruck.fromJson(json['selectedTruck'])
         : null;
-    try {
-      if (json['date'] != null && json['date'].isNotEmpty) {
-        date = DateTime.parse(json['date']).toIso8601String();
-      } else {
-        date = null;
-      }
-    } catch (e) {
-      date = null;
+    loadingPlan = json['loadingPlan'] != null
+        ? LoadingPlan.fromJson(json['loadingPlan'])
+        : null;
+    efficiency = json['efficiency'] != null
+        ? Efficiency.fromJson(json['efficiency'])
+        : null;
+    if (json['safetyChecklist'] != null) {
+      safetyChecklist = <SafetyChecklist>[];
+      json['safetyChecklist'].forEach((v) {
+        safetyChecklist?.add(SafetyChecklist.fromJson(v));
+      });
     }
-    boxDetails = json['boxDetails'] != null
-        ? BoxDetails.fromJson(json['boxDetails'])
+    if (json['alternativeTrucks'] != null) {
+      alternativeTrucks = <AlternativeTrucks>[];
+      json['alternativeTrucks'].forEach((v) {
+        alternativeTrucks?.add(AlternativeTrucks.fromJson(v));
+      });
+    }
+    boxDetailsItems = json['boxDetails'] != null
+        ? BoxDetailsItems.fromJson(json['boxDetails'])
         : null;
   }
 
   @override
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    if (truckDetails != null) {
-      data['truckDetails'] = truckDetails!.toJson();
+    if (selectedTruck != null) {
+      data['selectedTruck'] = selectedTruck?.toJson();
     }
-    if (date != null) {
-      data['date'] = date;
+    if (loadingPlan != null) {
+      data['loadingPlan'] = loadingPlan?.toJson();
     }
-    if (boxDetails != null) {
-      data['boxDetails'] = boxDetails!.toJson();
+    if (efficiency != null) {
+      data['efficiency'] = efficiency?.toJson();
+    }
+    if (safetyChecklist != null) {
+      data['safetyChecklist'] =
+          safetyChecklist?.map((v) => v.toJson()).toList();
+    }
+    if (alternativeTrucks != null) {
+      data['alternativeTrucks'] =
+          alternativeTrucks?.map((v) => v.toJson()).toList();
+    }
+    if (boxDetailsItems != null) {
+      data['boxDetails'] = boxDetailsItems?.toJson();
     }
     return data;
   }
@@ -48,129 +76,141 @@ class CreateLoadModel extends ResponseDataObjectSerialization<CreateLoadModel> {
   }
 }
 
-class TruckDetails extends ResponseDataObjectSerialization<TruckDetails> {
-  String? truckName;
+class SelectedTruck extends ResponseDataObjectSerialization<SelectedTruck> {
+  String? name;
   Dimensions? dimensions;
-  int? totalWeight;
-  int? maxLoad;
-  double? volumeUtilization;
-  double? weightUtilization;
-  List<LoadingInstructions>? loadingInstructions;
-  List<LoadingZones>? loadingZones;
+  int? maxWeight;
 
-  TruckDetails({
-    this.truckName,
-    this.dimensions,
-    this.totalWeight,
-    this.maxLoad,
-    this.volumeUtilization,
-    this.weightUtilization,
-    this.loadingInstructions,
-    this.loadingZones,
-  });
+  SelectedTruck({this.name, this.dimensions, this.maxWeight});
 
-  TruckDetails.fromJson(Map<String, dynamic> json) {
-    truckName = json['truckName'];
+  SelectedTruck.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
     dimensions = json['dimensions'] != null
         ? Dimensions.fromJson(json['dimensions'])
         : null;
-    totalWeight = json['totalWeight'];
-    maxLoad = json['maxLoad'];
-    volumeUtilization = json['volumeUtilization'];
-    weightUtilization = json['weightUtilization'];
-    loadingInstructions = (json['loadingInstructions'] == null ||
-            json['loadingInstructions'] is! List)
-        ? null
-        : List<LoadingInstructions>.from((json['loadingInstructions'] as List)
-            .map((data) => LoadingInstructions.fromJson(data)));
-    loadingZones =
-        (json['loadingZones'] == null || json['loadingZones'] is! List)
-            ? null
-            : List<LoadingZones>.from((json['loadingZones'] as List)
-                .map((data) => LoadingZones.fromJson(data)));
+    maxWeight = json['maxWeight'];
   }
 
   @override
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['truckName'] = truckName;
+    data['name'] = name;
     if (dimensions != null) {
-      data['dimensions'] = dimensions!.toJson();
+      data['dimensions'] = dimensions?.toJson();
     }
-    data['totalWeight'] = totalWeight;
-    data['maxLoad'] = maxLoad;
-    data['volumeUtilization'] = volumeUtilization;
-    data['weightUtilization'] = weightUtilization;
-    if (loadingInstructions != null) {
-      data['loadingInstructions'] =
-          loadingInstructions?.map((v) => v.toJson()).toList();
-    }
-    if (loadingZones != null) {
-      data['loadingZones'] = loadingZones?.map((v) => v.toJson()).toList();
-    }
+    data['maxWeight'] = maxWeight;
     return data;
   }
 
   @override
-  TruckDetails fromJson(Map<String, dynamic> json) {
-    return TruckDetails.fromJson(json);
+  SelectedTruck fromJson(Map<String, dynamic> json) {
+    return SelectedTruck.fromJson(json);
   }
 }
 
-class LoadingInstructions
-    extends ResponseDataObjectSerialization<LoadingInstructions> {
-  int? step;
-  String? title;
-  String? content;
-
-  LoadingInstructions({this.step, this.title, this.content});
-
-  LoadingInstructions.fromJson(Map<String, dynamic> json) {
-    step = json['step'];
-    title = json['title'];
-    content = json['content'];
-  }
-
-  @override
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['step'] = step;
-    data['title'] = title;
-    data['content'] = content;
-    return data;
-  }
-
-  @override
-  LoadingInstructions fromJson(Map<String, dynamic> json) {
-    return LoadingInstructions.fromJson(json);
-  }
-}
-
-class LoadingZones extends ResponseDataObjectSerialization<LoadingZones> {
-  int? zoneNumber;
-  double? x;
-  double? y;
+class Dimensions extends ResponseDataObjectSerialization<Dimensions> {
+  double? length;
   double? width;
   double? height;
-  LoadBoxDetails? boxDetails;
 
-  LoadingZones({
+  Dimensions({this.length, this.width, this.height});
+
+  Dimensions.fromJson(Map<String, dynamic> json) {
+    length = (json['length'] as num).toDouble();
+    width = (json['width'] as num).toDouble();
+    height = (json['height'] as num).toDouble();
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['length'] = length;
+    data['width'] = width;
+    data['height'] = height;
+    return data;
+  }
+
+  @override
+  Dimensions fromJson(Map<String, dynamic> json) {
+    return Dimensions.fromJson(json);
+  }
+}
+
+class LoadingPlan extends ResponseDataObjectSerialization<LoadingPlan> {
+  List<Zones>? zones;
+  List<Instructions>? instructions;
+  List<Steps>? steps;
+
+  LoadingPlan({
+    this.zones,
+    this.instructions,
+    this.steps,
+  });
+
+  LoadingPlan.fromJson(Map<String, dynamic> json) {
+    if (json['zones'] != null) {
+      zones = <Zones>[];
+      json['zones'].forEach((v) {
+        zones?.add(Zones.fromJson(v));
+      });
+    }
+    if (json['instructions'] != null) {
+      instructions = <Instructions>[];
+      json['instructions'].forEach((v) {
+        instructions?.add(Instructions.fromJson(v));
+      });
+    }
+    if (json['steps'] != null) {
+      steps = <Steps>[];
+      json['steps'].forEach((v) {
+        steps?.add(Steps.fromJson(v));
+      });
+    }
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (zones != null) {
+      data['zones'] = zones?.map((v) => v.toJson()).toList();
+    }
+    if (instructions != null) {
+      data['instructions'] = instructions?.map((v) => v.toJson()).toList();
+    }
+    if (steps != null) {
+      data['steps'] = steps?.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+
+  @override
+  LoadingPlan fromJson(Map<String, dynamic> json) {
+    return LoadingPlan.fromJson(json);
+  }
+}
+
+class Zones extends ResponseDataObjectSerialization<Zones> {
+  int? zoneNumber;
+  Position? position;
+  DimensionsDepth? dimensionsDepth;
+  BoxDetails? boxDetails;
+
+  Zones({
     this.zoneNumber,
-    this.x,
-    this.y,
-    this.width,
-    this.height,
+    this.position,
+    this.dimensionsDepth,
     this.boxDetails,
   });
 
-  LoadingZones.fromJson(Map<String, dynamic> json) {
+  Zones.fromJson(Map<String, dynamic> json) {
     zoneNumber = json['zoneNumber'];
-    x = (json['x'] as num).toDouble();
-    y = (json['y'] as num).toDouble();
-    width = json['width'];
-    height = json['height'];
+    position =
+        json['position'] != null ? Position.fromJson(json['position']) : null;
+    dimensionsDepth = json['dimensions'] != null
+        ? DimensionsDepth.fromJson(json['dimensions'])
+        : null;
     boxDetails = json['boxDetails'] != null
-        ? LoadBoxDetails.fromJson(json['boxDetails'])
+        ? BoxDetails.fromJson(json['boxDetails'])
         : null;
   }
 
@@ -178,88 +218,106 @@ class LoadingZones extends ResponseDataObjectSerialization<LoadingZones> {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['zoneNumber'] = zoneNumber;
-    data['x'] = x;
-    data['y'] = y;
-    data['width'] = width;
-    data['height'] = height;
+    if (position != null) {
+      data['position'] = position?.toJson();
+    }
+    if (dimensionsDepth != null) {
+      data['dimensions'] = dimensionsDepth?.toJson();
+    }
     if (boxDetails != null) {
-      data['boxDetails'] = boxDetails!.toJson();
+      data['boxDetails'] = boxDetails?.toJson();
     }
     return data;
   }
 
   @override
-  LoadingZones fromJson(Map<String, dynamic> json) {
-    return LoadingZones.fromJson(json);
+  Zones fromJson(Map<String, dynamic> json) {
+    return Zones.fromJson(json);
   }
 }
 
-class LoadBoxDetails extends  ResponseDataObjectSerialization<LoadBoxDetails>{
-  int? boxLength;
-  int? boxWidth;
-  int? boxHeight;
-  int? boxWeight;
-  int? boxQuantity;
-  bool? isStackable;
+class Position extends ResponseDataObjectSerialization<Position> {
+  double? x;
+  double? y;
+  double? z;
 
-  LoadBoxDetails({
-    this.boxLength,
-    this.boxWidth,
-    this.boxHeight,
-    this.boxWeight,
-    this.boxQuantity,
-    this.isStackable,
-  });
+  Position({this.x, this.y, this.z});
 
-  LoadBoxDetails.fromJson(Map<String, dynamic> json) {
-    boxLength = json['boxLength'];
-    boxWidth = json['boxWidth'];
-    boxHeight = json['boxHeight'];
-    boxWeight = json['boxWeight'];
-    boxQuantity = json['boxQuantity'];
-    isStackable = json['isStackable'];
+  Position.fromJson(Map<String, dynamic> json) {
+    x = (json['x'] as num).toDouble();
+    y = (json['y'] as num).toDouble();
+    z = (json['z'] as num).toDouble();
   }
 
   @override
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['boxLength'] = boxLength;
-    data['boxWidth'] = boxWidth;
-    data['boxHeight'] = boxHeight;
-    data['boxWeight'] = boxWeight;
-    data['boxQuantity'] = boxQuantity;
-    data['isStackable'] = isStackable;
+    data['x'] = x;
+    data['y'] = y;
+    data['z'] = z;
     return data;
   }
 
   @override
-  LoadBoxDetails fromJson(Map<String, dynamic> json) {
-    return LoadBoxDetails.fromJson(json);
+  Position fromJson(Map<String, dynamic> json) {
+    return Position.fromJson(json);
   }
 }
 
-class BoxDetails extends ResponseDataObjectSerialization<BoxDetails> {
-  int? totalBoxes;
-  int? totalItems;
-  List<Boxes>? boxes;
+class DimensionsDepth extends ResponseDataObjectSerialization<DimensionsDepth> {
+  double? width;
+  double? height;
+  double? depth;
 
-  BoxDetails({this.totalBoxes, this.totalItems, this.boxes});
+  DimensionsDepth({this.width, this.height, this.depth});
 
-  BoxDetails.fromJson(Map<String, dynamic> json) {
-    totalBoxes = json['totalBoxes'];
-    totalItems = json['totalItems'];
-    boxes = (json['boxes'] == null || json['boxes'] is! List)
-        ? null
-        : List<Boxes>.from(
-            (json['boxes'] as List).map((data) => Boxes.fromJson(data)));
+  DimensionsDepth.fromJson(Map<String, dynamic> json) {
+    width = (json['width'] as num).toDouble();
+    height = (json['height'] as num).toDouble();
+    depth = (json['depth'] as num).toDouble();
   }
 
   @override
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['totalBoxes'] = totalBoxes;
-    data['totalItems'] = totalItems;
-    data['boxes'] = boxes;
+    data['width'] = width;
+    data['height'] = height;
+    data['depth'] = depth;
+    return data;
+  }
+
+  @override
+  DimensionsDepth fromJson(Map<String, dynamic> json) {
+    return DimensionsDepth.fromJson(json);
+  }
+}
+
+class BoxDetails extends ResponseDataObjectSerialization<BoxDetails> {
+  int? quantity;
+  Dimensions? dimensions;
+  double? weight;
+  bool? stackable;
+
+  BoxDetails({this.quantity, this.dimensions, this.weight, this.stackable});
+
+  BoxDetails.fromJson(Map<String, dynamic> json) {
+    quantity = json['quantity'];
+    dimensions = json['dimensions'] != null
+        ? Dimensions.fromJson(json['dimensions'])
+        : null;
+    weight = (json['weight'] as num).toDouble();
+    stackable = json['stackable'];
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['quantity'] = quantity;
+    if (dimensions != null) {
+      data['dimensions'] = dimensions?.toJson();
+    }
+    data['weight'] = weight;
+    data['stackable'] = stackable;
     return data;
   }
 
@@ -269,22 +327,379 @@ class BoxDetails extends ResponseDataObjectSerialization<BoxDetails> {
   }
 }
 
+class Instructions extends ResponseDataObjectSerialization<Instructions> {
+  int? step;
+  String? instruction;
+  String? warning;
+  String? zone;
+  String? weightWarning;
+
+  Instructions({
+    this.step,
+    this.instruction,
+    this.warning,
+    this.zone,
+    this.weightWarning,
+  });
+
+  Instructions.fromJson(Map<String, dynamic> json) {
+    step = json['step'];
+    instruction = json['instruction'];
+    warning = json['warning'];
+    zone = json['zone'];
+    weightWarning = json['weightWarning'];
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['step'] = step;
+    data['instruction'] = instruction;
+    data['warning'] = warning;
+    data['zone'] = zone;
+    data['weightWarning'] = weightWarning;
+    return data;
+  }
+
+  @override
+  Instructions fromJson(Map<String, dynamic> json) {
+    return Instructions.fromJson(json);
+  }
+}
+
+class Steps extends ResponseDataObjectSerialization<Steps> {
+  int? stepNumber;
+  String? action;
+  Details? details;
+  List<String>? safetyNotes;
+
+  Steps({this.stepNumber, this.action, this.details, this.safetyNotes});
+
+  Steps.fromJson(Map<String, dynamic> json) {
+    stepNumber = json['stepNumber'];
+    action = json['action'];
+    details =
+        json['details'] != null ? Details.fromJson(json['details']) : null;
+    safetyNotes = json['safetyNotes'].cast<String>();
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['stepNumber'] = stepNumber;
+    data['action'] = action;
+    if (details != null) {
+      data['details'] = details?.toJson();
+    }
+    data['safetyNotes'] = safetyNotes;
+    return data;
+  }
+
+  @override
+  Steps fromJson(Map<String, dynamic> json) {
+    return Steps.fromJson(json);
+  }
+}
+
+class Details extends ResponseDataObjectSerialization<Details> {
+  String? boxDimensions;
+  String? boxWeight;
+  String? zoneLocation;
+  String? runningWeight;
+
+  Details({
+    this.boxDimensions,
+    this.boxWeight,
+    this.zoneLocation,
+    this.runningWeight,
+  });
+
+  Details.fromJson(Map<String, dynamic> json) {
+    boxDimensions = json['boxDimensions'];
+    boxWeight = json['boxWeight'];
+    zoneLocation = json['zoneLocation'];
+    runningWeight = json['runningWeight'];
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['boxDimensions'] = boxDimensions;
+    data['boxWeight'] = boxWeight;
+    data['zoneLocation'] = zoneLocation;
+    data['runningWeight'] = runningWeight;
+    return data;
+  }
+
+  @override
+  Details fromJson(Map<String, dynamic> json) {
+    return Details.fromJson(json);
+  }
+}
+
+class Efficiency extends ResponseDataObjectSerialization<Efficiency> {
+  VolumeAnalysis? volumeAnalysis;
+  WeightAnalysis? weightAnalysis;
+  double? overallEfficiency;
+
+  Efficiency({
+    this.volumeAnalysis,
+    this.weightAnalysis,
+    this.overallEfficiency,
+  });
+
+  Efficiency.fromJson(Map<String, dynamic> json) {
+    volumeAnalysis = json['volumeAnalysis'] != null
+        ? VolumeAnalysis.fromJson(json['volumeAnalysis'])
+        : null;
+    weightAnalysis = json['weightAnalysis'] != null
+        ? WeightAnalysis.fromJson(json['weightAnalysis'])
+        : null;
+    overallEfficiency = json['overallEfficiency'];
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (volumeAnalysis != null) {
+      data['volumeAnalysis'] = volumeAnalysis?.toJson();
+    }
+    if (weightAnalysis != null) {
+      data['weightAnalysis'] = weightAnalysis?.toJson();
+    }
+    data['overallEfficiency'] = overallEfficiency;
+    return data;
+  }
+
+  @override
+  Efficiency fromJson(Map<String, dynamic> json) {
+    return Efficiency.fromJson(json);
+  }
+}
+
+class VolumeAnalysis extends ResponseDataObjectSerialization<VolumeAnalysis> {
+  int? totalVolume;
+  double? truckVolume;
+  double? volumeUtilization;
+  double? unusedVolume;
+  bool? isEfficient;
+
+  VolumeAnalysis({
+    this.totalVolume,
+    this.truckVolume,
+    this.volumeUtilization,
+    this.unusedVolume,
+    this.isEfficient,
+  });
+
+  VolumeAnalysis.fromJson(Map<String, dynamic> json) {
+    totalVolume = json['totalVolume'];
+    truckVolume = json['truckVolume'];
+    volumeUtilization = json['volumeUtilization'];
+    unusedVolume = json['unusedVolume'];
+    isEfficient = json['isEfficient'];
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['totalVolume'] = totalVolume;
+    data['truckVolume'] = truckVolume;
+    data['volumeUtilization'] = volumeUtilization;
+    data['unusedVolume'] = unusedVolume;
+    data['isEfficient'] = isEfficient;
+    return data;
+  }
+
+  @override
+  VolumeAnalysis fromJson(Map<String, dynamic> json) {
+    return VolumeAnalysis.fromJson(json);
+  }
+}
+
+class WeightAnalysis extends ResponseDataObjectSerialization<WeightAnalysis> {
+  int? totalWeight;
+  int? maxWeight;
+  double? weightUtilization;
+  int? remainingCapacity;
+  bool? isEfficient;
+
+  WeightAnalysis({
+    this.totalWeight,
+    this.maxWeight,
+    this.weightUtilization,
+    this.remainingCapacity,
+    this.isEfficient,
+  });
+
+  WeightAnalysis.fromJson(Map<String, dynamic> json) {
+    totalWeight = json['totalWeight'];
+    maxWeight = json['maxWeight'];
+    weightUtilization = json['weightUtilization'];
+    remainingCapacity = json['remainingCapacity'];
+    isEfficient = json['isEfficient'];
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['totalWeight'] = totalWeight;
+    data['maxWeight'] = maxWeight;
+    data['weightUtilization'] = weightUtilization;
+    data['remainingCapacity'] = remainingCapacity;
+    data['isEfficient'] = isEfficient;
+    return data;
+  }
+
+  @override
+  WeightAnalysis fromJson(Map<String, dynamic> json) {
+    return WeightAnalysis.fromJson(json);
+  }
+}
+
+class SafetyChecklist extends ResponseDataObjectSerialization<SafetyChecklist> {
+  String? id;
+  String? label;
+  bool? critical;
+
+  SafetyChecklist({this.id, this.label, this.critical});
+
+  SafetyChecklist.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    label = json['label'];
+    critical = json['critical'];
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['label'] = label;
+    data['critical'] = critical;
+    return data;
+  }
+
+  @override
+  SafetyChecklist fromJson(Map<String, dynamic> json) {
+    return SafetyChecklist.fromJson(json);
+  }
+}
+
+class AlternativeTrucks
+    extends ResponseDataObjectSerialization<AlternativeTrucks> {
+  String? name;
+  Dimensions? dimensions;
+  double? volumeUtilization;
+  double? weightUtilization;
+  double? maxWeight;
+
+  AlternativeTrucks({
+    this.name,
+    this.dimensions,
+    this.volumeUtilization,
+    this.weightUtilization,
+    this.maxWeight,
+  });
+
+  AlternativeTrucks.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    dimensions = json['dimensions'] != null
+        ? Dimensions.fromJson(json['dimensions'])
+        : null;
+    volumeUtilization = (json['volumeUtilization'] as num).toDouble();
+    weightUtilization = (json['weightUtilization'] as num).toDouble();
+    maxWeight = (json['maxWeight'] as num).toDouble();
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['name'] = name;
+    if (dimensions != null) {
+      data['dimensions'] = dimensions?.toJson();
+    }
+    data['volumeUtilization'] = volumeUtilization;
+    data['weightUtilization'] = weightUtilization;
+    data['maxWeight'] = maxWeight;
+    return data;
+  }
+
+  @override
+  AlternativeTrucks fromJson(Map<String, dynamic> json) {
+    return AlternativeTrucks.fromJson(json);
+  }
+}
+
+class BoxDetailsItems extends ResponseDataObjectSerialization<BoxDetailsItems> {
+  int? totalBoxes;
+  int? totalItems;
+  List<Boxes>? boxes;
+
+  BoxDetailsItems({this.totalBoxes, this.totalItems, this.boxes});
+
+  BoxDetailsItems.fromJson(Map<String, dynamic> json) {
+    totalBoxes = json['totalBoxes'];
+    totalItems = json['totalItems'];
+    if (json['boxes'] != null) {
+      boxes = <Boxes>[];
+      json['boxes'].forEach((v) {
+        boxes?.add(Boxes.fromJson(v));
+      });
+    }
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['totalBoxes'] = totalBoxes;
+    data['totalItems'] = totalItems;
+    if (boxes != null) {
+      data['boxes'] = boxes?.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+
+  @override
+  BoxDetailsItems fromJson(Map<String, dynamic> json) {
+    return BoxDetailsItems.fromJson(json);
+  }
+}
+
 class Boxes extends ResponseDataObjectSerialization<Boxes> {
   int? boxNumber;
-  int? items;
+  Dimensions? dimensions;
+  double? weight;
+  int? quantity;
+  bool? stackable;
 
-  Boxes({this.boxNumber, this.items});
+  Boxes({
+    this.boxNumber,
+    this.dimensions,
+    this.weight,
+    this.quantity,
+    this.stackable,
+  });
 
   Boxes.fromJson(Map<String, dynamic> json) {
     boxNumber = json['boxNumber'];
-    items = json['items'];
+    dimensions = json['dimensions'] != null
+        ? Dimensions.fromJson(json['dimensions'])
+        : null;
+    weight = (json['weight'] as num).toDouble();
+    quantity = json['quantity'];
+    stackable = json['stackable'];
   }
 
   @override
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['boxNumber'] = boxNumber;
-    data['items'] = items;
+    if (dimensions != null) {
+      data['dimensions'] = dimensions?.toJson();
+    }
+    data['weight'] = weight;
+    data['quantity'] = quantity;
+    data['stackable'] = stackable;
     return data;
   }
 

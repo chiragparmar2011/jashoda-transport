@@ -13,6 +13,7 @@ import 'package:jashoda_transport/core/widgets/image_assets.dart';
 import 'package:jashoda_transport/cubit/dashboard/calculation/calculation_cubit.dart';
 import 'package:jashoda_transport/data/model/truck/truck_list_model.dart';
 import 'package:jashoda_transport/getit_injector.dart';
+import 'package:jashoda_transport/ui/widget/truck_view.dart';
 
 class SavedCalculationScreen extends StatefulWidget {
   const SavedCalculationScreen({this.truckId, super.key});
@@ -106,7 +107,7 @@ class _SavedCalculationScreenState extends State<SavedCalculationScreen> {
                             context,
                             MyRoutes.truckDetailScreen,
                             arguments: {
-                              "truckId": data?.truckId,
+                              "truckId": data.truckId,
                             },
                           );
                         },
@@ -121,10 +122,9 @@ class _SavedCalculationScreenState extends State<SavedCalculationScreen> {
                           ),
                           child: Row(
                             children: [
-                              ImageAssets(
-                                image: AssetsPath.deliveryTruckIcon,
-                                height: 48,
-                                width: 48,
+                              const TruckViewWidget(
+                                height: 54,
+                                width: 54,
                               ),
                               Dimentions.sizedBox22W,
                               Expanded(
@@ -179,13 +179,12 @@ class _SavedCalculationScreenState extends State<SavedCalculationScreen> {
                                         ),
                                         Flexible(
                                           child: Text(
-                                            ' ${data.truckDetails?.dimensions?.l ?? ''}'
+                                            ' ${data.truckDetails?.dimensions?.length ?? '0.0'}'
                                             ' ${'x'} '
-                                            '${data.truckDetails?.dimensions?.w ?? ''}'
+                                            '${data.truckDetails?.dimensions?.width ?? '0.0'}'
                                             ' ${'x'} '
-                                            '${data.truckDetails?.dimensions?.h ?? ''}'
-                                            ' ${'x'} '
-                                            'in foot',
+                                            '${data.truckDetails?.dimensions?.height ?? '0.0'}',
+                                            // '${/*data.dimensionType*/ 'in foot'}',
                                             style: TextStyles()
                                                 .textStylesMontserrat(
                                               fontSize: 12,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jashoda_transport/data/model/load/box.dart';
 import 'package:jashoda_transport/data/model/load/create_load_model.dart';
-import 'package:jashoda_transport/data/model/truck/truck_detail_model.dart';
 import 'package:jashoda_transport/data/model/user/usermodel.dart';
 import 'package:jashoda_transport/ui/auth/mobile/enter_mo_number_screen.dart';
 import 'package:jashoda_transport/ui/auth/mobile/otp_verification_screen.dart';
@@ -94,8 +94,9 @@ class MyRoutes {
         final Map<String, dynamic> args =
             settings.arguments as Map<String, dynamic>;
         final CreateLoadModel data = args['data'];
+        final List<Box> boxes = args['boxes'];
         return MaterialPageRoute(
-          builder: (context) => VehicleLoadedScreen(data: data),
+          builder: (context) => VehicleLoadedScreen(data: data, boxes: boxes),
         );
       case truckDetailScreen:
         final Map<String, dynamic> args =

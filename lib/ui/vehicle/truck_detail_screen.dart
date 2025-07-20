@@ -11,6 +11,7 @@ import 'package:jashoda_transport/core/widgets/dialog/common_progress_indicator.
 import 'package:jashoda_transport/core/widgets/image_assets.dart';
 import 'package:jashoda_transport/cubit/dashboard/home/home_cubit.dart';
 import 'package:jashoda_transport/getit_injector.dart';
+import 'package:jashoda_transport/ui/widget/truck_view.dart';
 
 class TruckDetailScreen extends StatefulWidget {
   final String truckId;
@@ -57,12 +58,15 @@ class _TruckDetailScreenState extends State<TruckDetailScreen> {
                       },
                     ),
                     Dimentions.sizedBox20H,
-                    ImageAssets(
-                      image: AssetsPath.deliveryTruckIcon,
-                      height: 110,
-                      width: 110,
-                    ),
+                    const TruckViewWidget(),
                     Dimentions.sizedBox20H,
+                    Text(
+                      AppStrings.vehicleName,
+                      style: TextStyles().textStylesMontserrat(
+                        fontSize: 12,
+                        color: AppColors.darkGrey,
+                      ),
+                    ),
                     _buildContentText(
                       homeCubit.truckDetailModel?.truckDetails?.name ?? '',
                     ),
@@ -70,9 +74,9 @@ class _TruckDetailScreenState extends State<TruckDetailScreen> {
                     _buildHeaderText(AppStrings.dimensions),
                     Dimentions.sizedBox8H,
                     _buildContentText(
-                      '${homeCubit.truckDetailModel?.truckDetails?.dimensions?.l ?? '0.0'} L X '
-                      '${homeCubit.truckDetailModel?.truckDetails?.dimensions?.w ?? '0.0'} W X '
-                      '${homeCubit.truckDetailModel?.truckDetails?.dimensions?.h ?? '0.0'} H',
+                      '${homeCubit.truckDetailModel?.truckDetails?.dimensions?.length ?? '0.0'} L X '
+                      '${homeCubit.truckDetailModel?.truckDetails?.dimensions?.width ?? '0.0'} W X '
+                      '${homeCubit.truckDetailModel?.truckDetails?.dimensions?.height ?? '0.0'} H',
                       fontSize: 20,
                       alignLeft: true,
                     ),
@@ -80,12 +84,16 @@ class _TruckDetailScreenState extends State<TruckDetailScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        // _buildContentText(
+                        //   'Max Load: ${homeCubit.truckDetailModel?.truckDetails?.maxLoad}',
+                        //   fontSize: 16,
+                        // ),
                         _buildContentText(
-                          'Max Load: ${homeCubit.truckDetailModel?.truckDetails?.maxLoad}',
+                          'Total Weight: ${homeCubit.truckDetailModel?.truckDetails?.totalWeight}',
                           fontSize: 16,
                         ),
                         _buildContentText(
-                          'Total Weight: ${homeCubit.truckDetailModel?.truckDetails?.totalWeight}',
+                          'Date: ${Utils().formattedDate('${homeCubit.truckDetailModel?.createdAt}')}',
                           fontSize: 16,
                         ),
                       ],
@@ -116,7 +124,7 @@ class _TruckDetailScreenState extends State<TruckDetailScreen> {
                               homeCubit.truckDetailModel?.boxes?.length == 1;
                           final boxWidth = isSingleBox
                               ? MediaQuery.of(context).size.width
-                              : (MediaQuery.of(context).size.width - 64);
+                              : (MediaQuery.of(context).size.width - 64) / 2;
                           return SizedBox(
                             width: boxWidth,
                             child: Container(
