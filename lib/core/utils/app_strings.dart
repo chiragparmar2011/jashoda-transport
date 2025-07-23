@@ -60,9 +60,9 @@ class AppStrings {
   static const String calculateYourLoad = 'Calculate Your Load!';
   static const String calculationHeader = 'Enter your load details to calculate and find the perfect cargo vehicle for transportation!';
   static const String selectDimension = 'Select dimension';
-  static const String inch = 'inch';
-  static const String mm = 'mm';
-  static const String feet = 'feet';
+  // static const String inch = 'inch';
+  // static const String mm = 'mm';
+  // static const String feet = 'feet';
   static const String cm = 'cm';
   static const String enterLength = 'Enter Length';
   static const String enterWidth = 'Enter Width';

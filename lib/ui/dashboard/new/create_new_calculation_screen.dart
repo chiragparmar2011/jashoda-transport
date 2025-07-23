@@ -57,7 +57,7 @@ class _CreateNewCalculationScreenState
             case SubmitBoxLoadedState():
               final data = state.createLoadModel;
               final boxes = state.boxes;
-              Utils.successMessage(context, "Box Added");
+              // Utils.successMessage(context, "Box Added");
               Navigator.pushNamed(
                 context,
                 MyRoutes.vehicleLoadedScreen,

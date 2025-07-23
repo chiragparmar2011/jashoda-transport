@@ -21,21 +21,21 @@ class CalculationCubit extends Cubit<CalculationState> {
 
   int? dimension = DimensionUnits.cm.index;
   List<DimensionModel> unitDimensionList = [
-    DimensionModel(
-      'inch',
-      false,
-      DimensionUnits.inch.index,
-    ),
-    DimensionModel(
-      'mm',
-      false,
-      DimensionUnits.mm.index,
-    ),
-    DimensionModel(
-      'feet',
-      false,
-      DimensionUnits.feet.index,
-    ),
+    // DimensionModel(
+    //   'inch',
+    //   false,
+    //   DimensionUnits.inch.index,
+    // ),
+    // DimensionModel(
+    //   'mm',
+    //   false,
+    //   DimensionUnits.mm.index,
+    // ),
+    // DimensionModel(
+    //   'feet',
+    //   false,
+    //   DimensionUnits.feet.index,
+    // ),
     DimensionModel(
       'cm',
       true,

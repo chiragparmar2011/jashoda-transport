@@ -16,7 +16,7 @@ class AuthRepositoryImpl extends AuthBaseRepository {
   final prefs = injector.get<SharedPreferenceHelper>();
 
   @override
-  Future<String?> sendOTP(Map<String, dynamic> data) async {
+    Future<String?> sendOTP(Map<String, dynamic> data) async {
     final response = await networkApiService.post(
       endPoint: AppUrl.sendOTP,
       data: data,
