@@ -50,6 +50,22 @@ class _VehicleLoadedScreenState extends State<VehicleLoadedScreen> {
 
   @override
   Widget build(BuildContext context) {
+    /// Merged (Selected & Alternative) trucks.
+    List<AlternativeTrucks> allTrucks = [
+      if (widget.data?.selectedTruck != null)
+        AlternativeTrucks(
+          name: widget.data?.selectedTruck?.name,
+          dimensions: widget.data?.selectedTruck?.dimensions,
+          maxWeight: widget.data?.selectedTruck?.maxWeight?.toDouble(),
+        ),
+      ...widget.data?.alternativeTrucks ?? [],
+    ];
+
+    /// Remove Duplicate Trucks.
+    final uniqueTrucks = {
+      for (var t in allTrucks) t.name: t,
+    }.values.toList();
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.white,
@@ -207,7 +223,7 @@ class _VehicleLoadedScreenState extends State<VehicleLoadedScreen> {
                     _buildDividerView(),
                     _buildHeaderText('Alternative Trucks'),
                     const SizedBox(height: 8),
-                    ...(widget.data?.alternativeTrucks ?? []).map(
+                    ...(uniqueTrucks).map(
                       (truck) => Padding(
                         padding: const EdgeInsets.symmetric(vertical: 6),
                         child: GestureDetector(
